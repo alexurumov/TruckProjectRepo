@@ -1,4 +1,4 @@
-package com.example.truckmanagementproject;
+package truckmanagementproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
