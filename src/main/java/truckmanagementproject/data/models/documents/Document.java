@@ -1,8 +1,9 @@
-package truckmanagementproject.data.models;
+package truckmanagementproject.data.models.documents;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import truckmanagementproject.data.models.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,9 +19,6 @@ public abstract class Document extends BaseEntity {
 
     @Column(updatable = false, insertable = false)
     private String type;
-
-    @Column(name = "name", nullable = false)
-    private String name;
 
     @Column(name = "picture")
     private String picture;

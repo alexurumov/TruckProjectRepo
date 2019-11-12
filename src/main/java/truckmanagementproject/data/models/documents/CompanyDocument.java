@@ -1,13 +1,10 @@
-package truckmanagementproject.data.models;
+package truckmanagementproject.data.models.documents;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue(value = "Company")
@@ -15,6 +12,11 @@ import javax.persistence.ManyToOne;
 @Setter
 @NoArgsConstructor
 public class CompanyDocument extends Document {
+
+    @Column(name = "company_document_type")
+    @Enumerated(EnumType.STRING)
+    private CompanyDocumentType companyDocumentType;
+
     public CompanyDocument(String type) {
         super(type);
     }

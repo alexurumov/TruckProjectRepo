@@ -3,9 +3,12 @@ package truckmanagementproject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import truckmanagementproject.data.models.*;
-import truckmanagementproject.data.repositories.DocumentRepository;
-import truckmanagementproject.data.repositories.VehicleRepository;
+import truckmanagementproject.data.models.documents.*;
+import truckmanagementproject.data.models.users.Driver;
+import truckmanagementproject.data.models.users.Manager;
+import truckmanagementproject.data.models.vehicles.Trailer;
+import truckmanagementproject.data.models.vehicles.Truck;
+import truckmanagementproject.data.repositories.*;
 
 import java.sql.Date;
 
@@ -13,48 +16,80 @@ import java.sql.Date;
 public class main implements CommandLineRunner {
 
     private final VehicleRepository vehicleRepository;
-    private final DocumentRepository documentRepository;
+    private final DriverRepository driverRepository;
+    private final ManagerRepository managerRepository;
+    private final VehicleDocumentRepository vehicleDocumentRepository;
+    private final DriverDocumentRepository driverDocumentRepository;
+    private final CompanyDocumentRepository companyDocumentRepository;
+
 
     @Autowired
-    public main(VehicleRepository vehicleRepository, DocumentRepository documentRepository) {
+    public main(VehicleRepository vehicleRepository, DriverRepository driverRepository, ManagerRepository managerRepository, VehicleDocumentRepository vehicleDocumentRepository, DriverDocumentRepository driverDocumentRepository, CompanyDocumentRepository companyDocumentRepository) {
         this.vehicleRepository = vehicleRepository;
-        this.documentRepository = documentRepository;
+
+        this.driverRepository = driverRepository;
+        this.managerRepository = managerRepository;
+        this.vehicleDocumentRepository = vehicleDocumentRepository;
+        this.driverDocumentRepository = driverDocumentRepository;
+        this.companyDocumentRepository = companyDocumentRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        Truck truck = new Truck();
-        truck.setRegNumber("E 0212 KT");
+        Manager manager = new Manager();
+        manager.setName("Petar Petrov");
+        manager.setUsername("pesho");
+        manager.setPassword("123");
 
-        this.vehicleRepository.save(truck);
+        managerRepository.saveAndFlush(manager);
+
+        Driver driver = new Driver();
+        driver.setName("Krasimir Simeonov");
+        driver.setUsername("ksimeonov");
+        driver.setPassword("123");
+
+        driverRepository.saveAndFlush(driver);
+
+        Driver driver2 = new Driver();
+        driver2.setName("Ivan Karamihalev");
+        driver2.setUsername("ikaramihalev");
+        driver2.setPassword("123");
+
+        driverRepository.saveAndFlush(driver2);
+
+        Truck truck = new Truck();
+        truck.setRegNumber("E 0607 KX");
+
+        vehicleRepository.saveAndFlush(truck);
 
         Trailer trailer = new Trailer();
-        trailer.setRegNumber("E 1955 EE");
+        trailer.setRegNumber("E 1966 EE");
 
-        this.vehicleRepository.save(trailer);
+        vehicleRepository.saveAndFlush(trailer);
+
+        CompanyDocument companyDocument1 = new CompanyDocument();
+        companyDocument1.setCompanyDocumentType(CompanyDocumentType.TransportLicense);
+        companyDocument1.setExpiryDate(Date.valueOf("2020-05-28"));
+        companyDocument1.setPicture("url..");
+
+        companyDocumentRepository.saveAndFlush(companyDocument1);
 
         VehicleDocument vehicleDocument = new VehicleDocument();
-        vehicleDocument.setName("GO");
-        vehicleDocument.setPicture("url...");
-        vehicleDocument.setExpiryDate(Date.valueOf("2019-12-21"));
-        vehicleDocument.setVehicle(trailer);
+        vehicleDocument.setVehicleDocumentType(VehicleDocumentType.GO);
+        vehicleDocument.setExpiryDate(Date.valueOf("2020-04-12"));
+        vehicleDocument.setPicture("url..");
+        vehicleDocument.setVehicle(vehicleRepository.getByRegNumber("E 0607 KX"));
 
-        this.documentRepository.save(vehicleDocument);
+        vehicleDocumentRepository.saveAndFlush(vehicleDocument);
 
-        VehicleDocument vehicleDocument2 = new VehicleDocument();
-        vehicleDocument2.setName("Kasko");
-        vehicleDocument2.setPicture("url...");
-        vehicleDocument2.setExpiryDate(Date.valueOf("2019-11-26"));
-        vehicleDocument2.setVehicle(truck);
+        DriverDocument driverDocument = new DriverDocument();
+        driverDocument.setDriverDocumentType(DriverDocumentType.ID);
+        driverDocument.setExpiryDate(Date.valueOf("2030-12-12"));
+        driverDocument.setPicture("url...");
+        driverDocument.setDriver(driverRepository.getByUsername("ksimeonov"));
 
-        this.documentRepository.save(vehicleDocument2);
+        driverDocumentRepository.saveAndFlush(driverDocument);
 
-        CompanyDocument companyDocument = new CompanyDocument();
-        companyDocument.setName("License");
-        companyDocument.setPicture("url...");
-        companyDocument.setExpiryDate(Date.valueOf("2020-06-12"));
-
-        this.documentRepository.save(companyDocument);
     }
 }

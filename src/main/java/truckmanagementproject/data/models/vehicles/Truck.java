@@ -1,4 +1,4 @@
-package truckmanagementproject.data.models;
+package truckmanagementproject.data.models.vehicles;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
