@@ -4,5 +4,4 @@ public enum VehicleDocumentType {
     GO,
     Kasko,
     CmrInsurance,
-
 }

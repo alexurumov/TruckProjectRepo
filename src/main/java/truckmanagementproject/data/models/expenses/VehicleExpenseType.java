@@ -1,6 +1,6 @@
 package truckmanagementproject.data.models.expenses;
 
-public enum TruckExpenseType {
+public enum VehicleExpenseType {
     Fuel,
     AdBlue,
     Toll,

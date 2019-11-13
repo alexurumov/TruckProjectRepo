@@ -5,9 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@DiscriminatorValue(value = "Company")
+@Table(name = "company_documents")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,9 +16,8 @@ public class CompanyDocument extends Document {
 
     @Column(name = "company_document_type")
     @Enumerated(EnumType.STRING)
-    private CompanyDocumentType companyDocumentType;
+    private CompanyDocumentType type;
 
-    public CompanyDocument(String type) {
-        super(type);
-    }
+    @Column(name = "expiry_date", nullable = false)
+    private LocalDate expiryDate;
 }

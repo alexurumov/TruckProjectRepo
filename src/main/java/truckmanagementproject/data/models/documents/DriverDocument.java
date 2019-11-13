@@ -6,23 +6,23 @@ import lombok.Setter;
 import truckmanagementproject.data.models.users.Driver;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@DiscriminatorValue(value = "Driver")
+@Table(name = "driver_documents")
 @Getter
 @Setter
 @NoArgsConstructor
 public class DriverDocument extends Document {
 
+    @Column(name = "driver_document_type")
+    @Enumerated(EnumType.STRING)
+    private DriverDocumentType type;
+
+    @Column(name = "expiry_date", nullable = false)
+    private LocalDate expiryDate;
+
     @ManyToOne
     @JoinColumn(name = "driver_id", referencedColumnName = "id")
     private Driver driver;
-
-    @Column(name = "driver_document_type")
-    @Enumerated(EnumType.STRING)
-    private DriverDocumentType driverDocumentType;
-
-    public DriverDocument(String type) {
-        super(type);
-    }
 }

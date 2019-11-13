@@ -3,26 +3,24 @@ package truckmanagementproject.data.models.expenses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import truckmanagementproject.data.models.vehicles.Vehicle;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@DiscriminatorValue(value = "Truck")
+@Table(name = "vehicle_expenses")
 @Getter
 @Setter
 @NoArgsConstructor
-public class TruckExpense extends Expense {
-    public TruckExpense(String type) {
-        super(type);
-    }
+public class VehicleExpense extends Expense {
 
     @Column(name = "truck_expense_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TruckExpenseType truckExpenseType;
+    private VehicleExpenseType truckExpenseType;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "country", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -30,4 +28,9 @@ public class TruckExpense extends Expense {
 
     @Column(name = "picture")
     private String picture;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
+    private Vehicle vehicle;
+
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import truckmanagementproject.data.models.documents.DriverDocument;
+import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.models.users.User;
 
 import javax.persistence.*;
@@ -18,4 +19,7 @@ public class Driver extends User {
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DriverDocument> driverDocuments;
+
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Trip> trips;
 }
