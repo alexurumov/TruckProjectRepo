@@ -8,6 +8,7 @@ import truckmanagementproject.data.models.documents.TripDocument;
 import truckmanagementproject.data.models.expenses.Expense;
 import truckmanagementproject.data.models.expenses.TripExpense;
 import truckmanagementproject.data.models.milestones.Milestone;
+import truckmanagementproject.data.models.milestones.Status;
 import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @Table(name = "trips")
 @Getter
 @Setter
-//@NoArgsConstructor
+@NoArgsConstructor
 public class Trip extends BaseEntity {
 
     @Column(name = "date", nullable = false)
@@ -30,23 +31,23 @@ public class Trip extends BaseEntity {
     @Column(name = "direction", nullable = false)
     private String direction;
 
-    @Column(name = "reference", nullable = false)
+    @Column(name = "reference", nullable = false, unique = true)
     private String reference;
 
     @Column(name = "empty_km")
-    private Integer emptyKm;
+    private Integer emptyKm = 0;
 
     @Column(name = "trip_km")
-    private Integer tripKm;
+    private Integer tripKm = 0;
 
     @Column(name = "adr", nullable = false)
     private Boolean adr = false;
 
-    @Column(name = "price")
+    @Transient
     private BigDecimal price;
 
     @Column(name = "empty_pallets")
-    private Integer emptyPallets;
+    private Integer emptyPallets = 0;
 
     @Column(name = "is_finished", nullable = false)
     private Boolean isFinished = false;
@@ -68,15 +69,14 @@ public class Trip extends BaseEntity {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private List<TripDocument> documents = new ArrayList<>();
 
-    public Trip() {
-        if (this.isFinished) {
-            BigDecimal sum = BigDecimal.valueOf((this.emptyKm + this.tripKm) * 1.09);
-            BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-            sum = sum.add(expenses);
-            if (this.getAdr()) {
-                sum = sum.add(BigDecimal.valueOf(50.00));
-            }
-            this.setPrice(sum);
+    @PostLoad
+    private void postLoad() {
+        BigDecimal sum = BigDecimal.valueOf((this.getEmptyKm() + this.getTripKm()) * 1.09);
+        BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        sum = sum.add(expenses);
+        if (this.getAdr()) {
+            sum = sum.add(BigDecimal.valueOf(50.00));
         }
+        this.price = sum;
     }
 }

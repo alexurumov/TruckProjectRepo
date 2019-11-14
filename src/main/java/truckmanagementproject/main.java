@@ -7,16 +7,19 @@ import truckmanagementproject.data.models.documents.DriverDocument;
 import truckmanagementproject.data.models.documents.DriverDocumentType;
 import truckmanagementproject.data.models.documents.VehicleDocument;
 import truckmanagementproject.data.models.documents.VehicleDocumentType;
+import truckmanagementproject.data.models.expenses.Country;
+import truckmanagementproject.data.models.expenses.TripExpense;
+import truckmanagementproject.data.models.expenses.TripExpenseType;
 import truckmanagementproject.data.models.milestones.LocationType;
 import truckmanagementproject.data.models.milestones.Milestone;
 import truckmanagementproject.data.models.milestones.MilestoneType;
-import truckmanagementproject.data.models.milestones.Status;
 import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
 import truckmanagementproject.data.repositories.documents.CompanyDocumentRepository;
 import truckmanagementproject.data.repositories.documents.DriverDocumentRepository;
 import truckmanagementproject.data.repositories.documents.VehicleDocumentRepository;
+import truckmanagementproject.data.repositories.expenses.TripExpenseRepository;
 import truckmanagementproject.data.repositories.milestones.MilestoneRepository;
 import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.data.repositories.users.DriverRepository;
@@ -24,10 +27,10 @@ import truckmanagementproject.data.repositories.users.ManagerRepository;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.stream.Collectors;
 
 @Component
 public class main implements CommandLineRunner {
@@ -40,10 +43,11 @@ public class main implements CommandLineRunner {
     private final CompanyDocumentRepository companyDocumentRepository;
     private final MilestoneRepository milestoneRepository;
     private final TripRepository tripRepository;
+    private final TripExpenseRepository tripExpenseRepository;
 
 
     @Autowired
-    public main(VehicleRepository vehicleRepository, DriverRepository driverRepository, ManagerRepository managerRepository, VehicleDocumentRepository vehicleDocumentRepository, DriverDocumentRepository driverDocumentRepository, CompanyDocumentRepository companyDocumentRepository, MilestoneRepository milestoneRepository, TripRepository tripRepository) {
+    public main(VehicleRepository vehicleRepository, DriverRepository driverRepository, ManagerRepository managerRepository, VehicleDocumentRepository vehicleDocumentRepository, DriverDocumentRepository driverDocumentRepository, CompanyDocumentRepository companyDocumentRepository, MilestoneRepository milestoneRepository, TripRepository tripRepository, TripExpenseRepository tripExpenseRepository) {
         this.vehicleRepository = vehicleRepository;
         this.driverRepository = driverRepository;
         this.managerRepository = managerRepository;
@@ -52,30 +56,29 @@ public class main implements CommandLineRunner {
         this.companyDocumentRepository = companyDocumentRepository;
         this.milestoneRepository = milestoneRepository;
         this.tripRepository = tripRepository;
+        this.tripExpenseRepository = tripExpenseRepository;
     }
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
 
-        //Create a driver and save it to DB
-        Driver driver = this.createNewDriver(
-                "Ivan Karamihalev",
-                "IKaramihalev",
-                "1234",
-                LocalTime.of(8, 50),
-                LocalTime.of(20, 30));
+//        //Create a driver and save it to DB
+//        this.createNewDriver(
+//                "Ivan Karamihalev",
+//                "IKaramihalev",
+//                "1234",
+//                LocalTime.of(8, 50),
+//                LocalTime.of(20, 30));
 
-        //Create a driver document
-        DriverDocument driverDocument = this.createNewDriverDocument(
-                DriverDocumentType.ID,
-                "driverDocumentUrl...",
-                LocalDate.of(2020, 5, 28));
-
-        //Assign document to driver and save to DB
-        driver.getDriverDocuments().add(driverDocument);
-        driverRepository.saveAndFlush(driver);
-        driverDocumentRepository.saveAndFlush(driverDocument);
+//        //Create a driver document + Assign document to driver and save to DB
+//        DriverDocument driverDocument = this.createNewDriverDocument(
+//                DriverDocumentType.ID,
+//                "driverDocumentUrl...",
+//                LocalDate.of(2020, 5, 28));
+//
+//        driverDocument.setDriver(driverRepository.getByUsername("IKaramihalev"));
+//        driverDocumentRepository.saveAndFlush(driverDocument);
 
 //        //Create a vehicle and save it to DB
 //        this.createNewVehicle("E7210MH / E2186EE");
@@ -86,20 +89,19 @@ public class main implements CommandLineRunner {
 //                "vehicleDocumentUrl...",
 //                LocalDate.of(2020, 6, 12));
 //
-////        vehicle.getDocuments().add(vehicleDocument);
-////        vehicleRepository.saveAndFlush(vehicle);
-////
-////        //Create a trip with driver and vehicle and save it to DB
-////        Trip trip = this.createNewTrip(
-////                LocalDate.of(2019, 11, 14),
-////                "BE -> DE",
-////                "LGQY21204",
-////                false,
-////                driver,
-////                vehicle);
-//
+//        vehicleDocument.setVehicle(vehicleRepository.getByRegNumber("E7210MH / E2186EE"));
+//        vehicleDocumentRepository.saveAndFlush(vehicleDocument);
+
+//        //Create a trip with driver and vehicle and save it to DB
+//        this.createNewTrip(
+//                LocalDate.of(2019, 11, 14),
+//                "BE -> DE",
+//                "LGQY21204",
+//                false,
+//                driverRepository.getByUsername("IKaramihalev"),
+//                vehicleRepository.getByRegNumber("E7210MH / E2186EE"));
+
 //        //Create a collection, set it's trip and save it to DB
-//
 //        Milestone ital_heywood = this.createMilestone(
 //                MilestoneType.Collection,
 //                LocationType.Depot,
@@ -111,8 +113,11 @@ public class main implements CommandLineRunner {
 //                "Loading 12 EP for export for Greece with ref: Ital123123",
 //                LocalDateTime.of(2019, 11, 15, 8, 0));
 //
-//        ////Create a delivery and save it to DB
-//
+//        ital_heywood.setTrip(tripRepository.getByReference("LGQY21204"));
+//        milestoneRepository.saveAndFlush(ital_heywood);
+
+        //Create a delivery, set it's trip and save it to DB
+
 //        Milestone syngenta = this.createMilestone(
 //                MilestoneType.Delivery,
 //                LocationType.Standard,
@@ -123,15 +128,12 @@ public class main implements CommandLineRunner {
 //                        "Greece",
 //                "Delivery of 12 EP from Ital Heywood, UK with ref: SY1023123",
 //                LocalDateTime.of(2019, 11, 20, 14, 30));
-
-//        trip.getMilestones().add(ital_heywood);
-//        trip.getMilestones().add(syngenta);
-//        milestoneRepository.saveAndFlush(ital_heywood);
+//
+//        syngenta.setTrip(tripRepository.getByReference("LGQY21204"));
 //        milestoneRepository.saveAndFlush(syngenta);
-//        tripRepository.saveAndFlush(trip);
 
-        //TODO make trip cost logic (Transient or property)
-
+//        //Test milestones
+//        Trip trip = tripRepository.getByReference("LGQY21204");
 //        Milestone milestone1 = trip.getMilestones()
 //                .stream()
 //                .filter(milestone -> !milestone.getStatus().equals(Status.Finished))
@@ -147,6 +149,26 @@ public class main implements CommandLineRunner {
 //                    .findFirst().orElse(null);
 //        }
 
+//        TripExpense tripExpense = new TripExpense();
+//        tripExpense.setTripExpenseType(TripExpenseType.Parking);
+//        tripExpense.setCountry(Country.Germany);
+//        tripExpense.setDate(LocalDate.of(2019, 11, 14));
+//        tripExpense.setPicture("Trip Expense Url ...");
+//        tripExpense.setCost(BigDecimal.valueOf(30.00));
+//        tripExpense.setTrip(tripRepository.getByReference("LGQY21204"));
+//        tripExpenseRepository.saveAndFlush(tripExpense);
+
+//        Trip trip = tripRepository.getByReference("LGQY21204");
+//        trip.setEmptyKm(16);
+//        trip.setTripKm(315);
+//        tripRepository.saveAndFlush(trip);
+
+
+//        //Test Trip cost formula
+//        Trip trip = tripRepository.getByReference("LGQY21204");
+//
+//        System.out.println();
+
     }
 
     private Milestone createMilestone(MilestoneType type, LocationType locationType, String name, String address, String details, LocalDateTime deadline) {
@@ -160,7 +182,7 @@ public class main implements CommandLineRunner {
         return milestone;
     }
 
-    private Trip createNewTrip(LocalDate date, String direction, String reference, boolean hasAdr, Driver driver, Vehicle vehicle) {
+    private void createNewTrip(LocalDate date, String direction, String reference, boolean hasAdr, Driver driver, Vehicle vehicle) {
         Trip trip = new Trip();
         trip.setDate(date);
         trip.setDirection(direction);
@@ -168,7 +190,7 @@ public class main implements CommandLineRunner {
         trip.setAdr(hasAdr);
         trip.setDriver(driver);
         trip.setVehicle(vehicle);
-        return trip;
+        tripRepository.saveAndFlush(trip);
     }
 
     private VehicleDocument createNewVehicleDocument(VehicleDocumentType type, String pictureUrl, LocalDate expiryDate) {
@@ -190,15 +212,16 @@ public class main implements CommandLineRunner {
     private void createNewVehicle(String regNumber) {
         Vehicle vehicle = new Vehicle();
         vehicle.setRegNumber(regNumber);
+        vehicleRepository.saveAndFlush(vehicle);
     }
 
-    private Driver createNewDriver(String name, String username, String password, LocalTime drivingHours, LocalTime workingHours) {
+    private void createNewDriver(String name, String username, String password, LocalTime drivingHours, LocalTime workingHours) {
         Driver driver = new Driver();
         driver.setName(name);
         driver.setUsername(username);
         driver.setPassword(password);
         driver.setDrivingHours(drivingHours);
         driver.setWorkingHours(workingHours);
-        return driver;
+        driverRepository.saveAndFlush(driver);
     }
 }

@@ -6,4 +6,5 @@ import truckmanagementproject.data.models.trips.Trip;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, String> {
+    Trip getByReference(String reference);
 }
