@@ -29,7 +29,7 @@ public class VehicleExpense extends Expense {
     @Column(name = "picture")
     private String picture;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     private Vehicle vehicle;
 

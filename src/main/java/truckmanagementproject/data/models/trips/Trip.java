@@ -14,6 +14,7 @@ import truckmanagementproject.data.models.vehicles.Vehicle;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,6 +48,9 @@ public class Trip extends BaseEntity {
     @Column(name = "empty_pallets")
     private Integer emptyPallets;
 
+    @Column(name = "is_finished", nullable = false)
+    private Boolean isFinished = false;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "driver_id", referencedColumnName = "id")
     private Driver driver;
@@ -55,22 +59,24 @@ public class Trip extends BaseEntity {
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     private Vehicle vehicle;
 
-    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Milestone> milestones;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<Milestone> milestones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<TripExpense> expenses;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<TripExpense> expenses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<TripDocument> documents;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<TripDocument> documents = new ArrayList<>();
 
     public Trip() {
-//        BigDecimal sum = BigDecimal.valueOf((this.emptyKm + this.tripKm) * 1.09);
-//        BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-//        sum = sum.add(expenses);
-//        if (this.getAdr()) {
-//            sum = sum.add(BigDecimal.valueOf(50.00));
-//        }
-//        this.setPrice(sum);
+        if (this.isFinished) {
+            BigDecimal sum = BigDecimal.valueOf((this.emptyKm + this.tripKm) * 1.09);
+            BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+            sum = sum.add(expenses);
+            if (this.getAdr()) {
+                sum = sum.add(BigDecimal.valueOf(50.00));
+            }
+            this.setPrice(sum);
+        }
     }
 }

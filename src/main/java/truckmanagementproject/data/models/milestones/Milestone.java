@@ -37,7 +37,11 @@ public class Milestone extends BaseEntity {
     @Column(name = "deadline")
     private LocalDateTime deadline;
 
-    @ManyToOne(optional = false)
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.OnTheWay;
+
+    @ManyToOne
     @JoinColumn(name = "trip_id", referencedColumnName = "id")
     private Trip trip;
 

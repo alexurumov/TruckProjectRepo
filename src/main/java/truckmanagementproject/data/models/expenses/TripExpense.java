@@ -30,7 +30,7 @@ public class TripExpense extends Expense {
     @Column(name = "picture")
     private String picture;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "trip_id", referencedColumnName = "id")
     private Trip trip;
 }

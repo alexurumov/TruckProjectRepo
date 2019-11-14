@@ -9,6 +9,7 @@ import truckmanagementproject.data.models.expenses.VehicleExpense;
 import truckmanagementproject.data.models.trips.Trip;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,13 +22,13 @@ public class Vehicle extends BaseEntity {
     @Column(name = "reg_number", nullable = false, unique = true, updatable = false)
     private String regNumber;
 
-    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<VehicleDocument> documents;
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private List<VehicleDocument> documents = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Trip> trips;
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private List<Trip> trips = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<VehicleExpense> expenses;
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private List<VehicleExpense> expenses = new ArrayList<>();
 
 }

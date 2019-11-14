@@ -10,6 +10,7 @@ import truckmanagementproject.data.models.users.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,9 +26,11 @@ public class Driver extends User {
     @Column(name = "working_hours")
     private LocalTime workingHours;
 
-    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<DriverDocument> driverDocuments;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
+    private List<DriverDocument> driverDocuments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Trip> trips;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
+    private List<Trip> trips = new ArrayList<>();
+
+
 }
