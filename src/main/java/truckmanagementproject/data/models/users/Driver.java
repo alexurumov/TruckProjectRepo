@@ -8,6 +8,8 @@ import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.models.users.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -16,6 +18,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Driver extends User {
+
+    @Column(name = "driving_hours")
+    private LocalTime drivingHours;
+
+    @Column(name = "working_hours")
+    private LocalTime workingHours;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DriverDocument> driverDocuments;

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import truckmanagementproject.data.models.BaseEntity;
 import truckmanagementproject.data.models.documents.TripDocument;
+import truckmanagementproject.data.models.expenses.Expense;
 import truckmanagementproject.data.models.expenses.TripExpense;
 import truckmanagementproject.data.models.milestones.Milestone;
 import truckmanagementproject.data.models.users.Driver;
@@ -19,7 +20,7 @@ import java.util.List;
 @Table(name = "trips")
 @Getter
 @Setter
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Trip extends BaseEntity {
 
     @Column(name = "date", nullable = false)
@@ -31,10 +32,10 @@ public class Trip extends BaseEntity {
     @Column(name = "reference", nullable = false)
     private String reference;
 
-    @Column(name = "empty_km", nullable = false)
+    @Column(name = "empty_km")
     private Integer emptyKm;
 
-    @Column(name = "trip_km", nullable = false)
+    @Column(name = "trip_km")
     private Integer tripKm;
 
     @Column(name = "adr", nullable = false)
@@ -43,7 +44,7 @@ public class Trip extends BaseEntity {
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "empty_pallets", nullable = false)
+    @Column(name = "empty_pallets")
     private Integer emptyPallets;
 
     @ManyToOne(optional = false)
@@ -63,11 +64,13 @@ public class Trip extends BaseEntity {
     @OneToMany(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TripDocument> documents;
 
-//    BigDecimal sum = BigDecimal.valueOf((this.emptyKm + this.tripKm) * 1.09);
-//    BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-//    sum = sum.add(expenses);
+    public Trip() {
+//        BigDecimal sum = BigDecimal.valueOf((this.emptyKm + this.tripKm) * 1.09);
+//        BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+//        sum = sum.add(expenses);
 //        if (this.getAdr()) {
-//        sum.add(BigDecimal.valueOf(50.00));
-//    }
+//            sum = sum.add(BigDecimal.valueOf(50.00));
+//        }
 //        this.setPrice(sum);
+    }
 }
