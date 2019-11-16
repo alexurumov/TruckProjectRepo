@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload file</title>
+</head>
+<body>
+<div th:if="${msg}">
+    [[${msg}]]
+</div>
+<div>
+    <span><a href="upload">Upload More Photos</a></span>
+
+    <ul>
+        <th:block th:each="doc : ${docs}">
+            <li>
+                [[${doc.getType()}]]<br>
+                <img th:src="@{/uploads/{image}(image=${doc.picture})}"><br>
+            </li>
+        </th:block>
+    </ul>
+
+
+</div>
+</body>
+</html>
