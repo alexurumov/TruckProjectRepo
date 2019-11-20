@@ -18,6 +18,11 @@ public class DriverController {
     public String addDriver(@ModelAttribute AddDriverModel model) {
         //service -> add driver
         System.out.println();
-        return "redirect:/all-drivers";
+        return "redirect:/drivers/all";
+    }
+
+    @GetMapping("/drivers/all")
+    public String getAllDrivers() {
+        return "all-drivers";
     }
 }
