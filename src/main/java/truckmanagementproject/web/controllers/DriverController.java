@@ -11,7 +11,7 @@ public class DriverController {
 
     @GetMapping("/drivers/add")
     public String getAddDriverForm() {
-        return "add-driver";
+        return "drivers/add-driver";
     }
 
     @PostMapping("/drivers/add")
@@ -23,6 +23,6 @@ public class DriverController {
 
     @GetMapping("/drivers/all")
     public String getAllDrivers() {
-        return "all-drivers";
+        return "drivers/all-drivers";
     }
 }

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import truckmanagementproject.web.models.AddDriverModel;
 import truckmanagementproject.web.models.AddTripModel;
 
 @Controller
@@ -12,7 +11,7 @@ public class TripController {
 
     @GetMapping("/trips/add")
     public String getTripAddForm() {
-        return "add-trip";
+        return "trips/add-trip";
     }
 
     @PostMapping("/trips/add")
@@ -24,11 +23,11 @@ public class TripController {
 
     @GetMapping("/trips/current")
     public String getAllCurrentTrips() {
-        return "all-current-trips";
+        return "trips/all-current-trips";
     }
 
     @GetMapping("/trips/finished")
     public String getAllFinishedTrips() {
-        return "all-finished-trips";
+        return "trips/all-finished-trips";
     }
 }
