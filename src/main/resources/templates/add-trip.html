@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/navbar}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="py-5 py-sm-11">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col text-center">
+                        <h1 style="margin-bottom: 40px">Add new trip</h1>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <form th:action="@{/trips/add}" method="post">
+                            <div class="modal-body p-0">
+                                <div class="px-3 py-5 px-sm-5">
+                                    <div class="tab-content">
+                                        <div class="col-md-6 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
+
+                                            <label for="tripDate">Trip date</label>
+                                            <input class="form-control form-control-lg mb-5" id="tripDate"
+                                                   type="text" name="tripDate" placeholder="Trip date">
+
+                                            <label for="tripDirection">Trip direction</label>
+                                            <input class="form-control form-control-lg mb-5" id="tripDirection"
+                                                   type="text" name="tripDirection" placeholder="Trip direction">
+
+                                            <label for="tripReference">Trip reference</label>
+                                            <input class="form-control form-control-lg mb-5" id="tripReference"
+                                                   type="text" name="tripReference" placeholder="Trip reference">
+
+                                            <label for="tripIsAdr">Trip is ADR</label>
+                                            <input class="form-control form-control-lg mb-5" id="tripIsAdr"
+                                                   type="text" name="tripIsAdr" placeholder="Trip is ADR boolean">
+
+                                            <label for="tripDriver">Trip driver</label>
+                                            <input class="form-control form-control-lg mb-5" id="tripDriver"
+                                                   type="text" name="tripDriver" placeholder="Trip driver dropdown">
+
+                                            <label for="tripVehicle">Trip vehicle</label>
+                                            <input class="form-control form-control-lg mb-5" id="tripVehicle"
+                                                   type="text" name="tripVehicle" placeholder="Trip vehicle dropdown">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mx-auto modal-footer">
+                                <button class="btn btn-block btn-lg btn-primary" type="submit">Add new trip</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+
+</body>
+</html>

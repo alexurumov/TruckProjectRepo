@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/navbar}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="py-5 py-sm-11">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col text-center">
+                        <h1 style="margin-bottom: 40px">Add new driver</h1>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <form th:action="@{/drivers/add}" method="post">
+                            <div class="modal-body p-0">
+                                <div class="px-3 py-5 px-sm-5">
+                                    <div class="tab-content">
+                                        <div class="col-md-6 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
+                                            <label for="driverFirstName">First name</label>
+                                            <input class="form-control form-control-lg mb-5" id="driverFirstName"
+                                                   type="text" name="firstName" placeholder="First name ">
+                                            <label for="driverLastName">Last name</label>
+                                            <input class="form-control form-control-lg mb-5" id="driverLastName"
+                                                   type="text"
+                                                   name="lastName" placeholder="Last name">
+                                            <label for="driverUsername">Username</label>
+                                            <input class="form-control form-control-lg mb-5" id="driverUsername"
+                                                   type="text"
+                                                   name="username" placeholder="Last name">
+                                            <label for="driverPassword">Password</label>
+                                            <input class="form-control form-control-lg mb-5" id="driverPassword"
+                                                   type="password" name="password" placeholder="Set password">
+                                            <label for="driverConrirmPassword">Confirm password</label>
+                                            <input class="form-control form-control-lg mb-5" id="driverConrirmPassword"
+                                                   type="password" name="confirmPassword" placeholder="Confirm password">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mx-auto modal-footer">
+                                <button class="btn btn-block btn-lg btn-primary" type="submit">Add new driver</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+
+</body>
+</html>
