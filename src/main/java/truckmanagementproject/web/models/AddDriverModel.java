@@ -9,8 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddDriverModel {
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private String username;
     private String password;
     private String confirmPassword;

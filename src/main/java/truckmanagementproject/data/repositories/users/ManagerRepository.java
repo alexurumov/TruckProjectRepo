@@ -6,4 +6,7 @@ import truckmanagementproject.data.models.users.Manager;
 
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, String> {
+    boolean existsByUsername(String username);
+
+    boolean existsByName(String name);
 }

@@ -81,6 +81,8 @@
           <element id="library" level="project" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.2" />
           <element id="library" level="project" name="Maven: org.springframework:spring-core:5.2.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-jcl:5.2.1.RELEASE" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.9" />
+          <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:2.3.5" />
         </element>
       </element>
       <element id="directory" name="META-INF">
