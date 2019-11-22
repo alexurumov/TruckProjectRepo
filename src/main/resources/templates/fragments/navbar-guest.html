@@ -23,17 +23,9 @@
                         </div>
                     </li>
                 </ul>
-                    <hr class="w-100">
-                    <div>
-                        <span class="avatar avatar-md h5 bg-primary rounded-circle">
-                            <th:block th:if="${session.user == null}">
-
-                            </th:block>
-                            <th:block th:unless="${session.user == null}">
-                                [[${#strings.substring(${session.user.username}, 0, 2)}]]
-                            </th:block>
-                        </span>
-                    </div>
+                <hr class="w-100">
+            </div>
+        </div>
             </div>
         </div>
         </div>
