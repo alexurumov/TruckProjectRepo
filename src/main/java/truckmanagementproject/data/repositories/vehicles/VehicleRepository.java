@@ -6,5 +6,8 @@ import truckmanagementproject.data.models.vehicles.Vehicle;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, String> {
+
+    boolean existsByRegNumber(String regNumber);
+
     Vehicle getByRegNumber(String regNumber);
 }

@@ -9,6 +9,7 @@ import truckmanagementproject.services.AddManagerValidationService;
 import truckmanagementproject.services.HashingService;
 import truckmanagementproject.services.ManagerService;
 import truckmanagementproject.services.models.AddManagerServiceModel;
+import truckmanagementproject.services.models.AddVehicleServiceModel;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {

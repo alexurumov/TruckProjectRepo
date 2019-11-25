@@ -20,18 +20,15 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <form th:action="@{/vehicles/add}" method="post">
+                        <form th:action="@{/vehicles/add}" class="col-md-6 mx-auto" method="post">
                             <div class="modal-body p-0">
                                 <div class="px-3 py-5 px-sm-5">
                                     <div class="tab-content">
-                                        <div class="col-md-6 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
-                                            <label for="truckNumber">Truck registration number</label>
-                                            <input class="form-control form-control-lg mb-5" id="truckNumber"
-                                                   type="text" name="truckRegNumber" placeholder="Truck reg number ">
+                                        <div class="col-md-12 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
 
-                                            <label for="trailerNumber">Trailer registration number</label>
-                                            <input class="form-control form-control-lg mb-5" id="trailerNumber"
-                                                   type="text" name="trailerRegNumber" placeholder="Trailer reg number">
+                                            <label for="vehicleRegNumber">Vehicle registration number</label>
+                                            <input class="form-control form-control-lg mb-5" id="vehicleRegNumber"
+                                                   type="text" name="regNumber" placeholder="Truck / trailer ">
 
                                         </div>
                                     </div>

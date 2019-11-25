@@ -8,8 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AddVehicleModel {
-
-    private String truckRegNumber;
-    private String trailerRegNumber;
-
+    private String regNumber;
 }
