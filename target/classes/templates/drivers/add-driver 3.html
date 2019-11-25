@@ -20,19 +20,11 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <form th:action="@{/drivers/add}" method="post" th:object="${model}">
+                        <form th:action="@{/drivers/add}" method="post">
                             <div class="modal-body p-0">
                                 <div class="px-3 py-5 px-sm-5">
                                     <div class="tab-content">
                                         <div class="col-md-6 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
-
-                                            <!--                            Alert popup message for invalid input!-->
-                                            <th:block th:if="${#fields.hasAnyErrors()}">
-                                                <div class="alert alert-danger alert-dismissible" role="alertdialog">
-                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                                    Invalid input!
-                                                </div>
-                                            </th:block>
 
                                             <label for="driverName">Full name</label>
                                             <input class="form-control form-control-lg mb-5" id="driverName"
@@ -58,7 +50,6 @@
                             <div class="col-md-6 mx-auto modal-footer">
                                 <button class="btn btn-block btn-lg btn-primary" type="submit">Add new driver</button>
                             </div>
-
                         </form>
                     </div>
                 </div>

@@ -20,20 +20,11 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <form th:action="@{/managers/add}" method="post" th:object="${model}">
+                        <form th:action="@{/managers/add}" method="post">
                             <div class="modal-body p-0">
                                 <div class="px-3 py-5 px-sm-5">
                                     <div class="tab-content">
-                                        <div class="col-md-6 mx-auto tab-pane fade show active" id="projectDetails"
-                                             role="tabpanel">
-
-<!--                                            Alert popup message for invalid input!-->
-                                            <th:block th:if="${#fields.hasAnyErrors()}">
-                                                <div class="alert alert-danger alert-dismissible" role="alertdialog">
-                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                                    Invalid input!
-                                                </div>
-                                            </th:block>
+                                        <div class="col-md-6 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
 
                                             <label for="managerName">Full name</label>
                                             <input class="form-control form-control-lg mb-5" id="managerName"
@@ -50,8 +41,7 @@
 
                                             <label for="managerConrirmPassword">Confirm password</label>
                                             <input class="form-control form-control-lg mb-5" id="managerConrirmPassword"
-                                                   type="password" name="confirmPassword"
-                                                   placeholder="Confirm password">
+                                                   type="password" name="confirmPassword" placeholder="Confirm password">
                                         </div>
                                     </div>
                                 </div>
