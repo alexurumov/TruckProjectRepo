@@ -10,4 +10,5 @@ import lombok.Setter;
 public class LoginUserViewModel {
     private String username;
     private String role;
+    private String shortUsername;
 }

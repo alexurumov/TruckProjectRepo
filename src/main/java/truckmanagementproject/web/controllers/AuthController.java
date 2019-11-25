@@ -40,7 +40,14 @@ public class AuthController {
         }
 
         LoginUserViewModel userViewModel = mapper.map(userModel, LoginUserViewModel.class);
+        userViewModel.setShortUsername(userViewModel.getUsername().substring(0, 2));
         httpSession.setAttribute("user", userViewModel);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/home";
     }
 
