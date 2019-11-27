@@ -41,7 +41,7 @@ public class DocumentController {
                                             ModelAndView modelAndView,
                                             HttpSession session) {
 
-        modelAndView.setViewName("/documents/trip-add");
+        modelAndView.setViewName("/documents/trip/add");
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
         String driverUsername = user.getUsername();
 
@@ -71,6 +71,6 @@ public class DocumentController {
     @GetMapping("/trip/all")
     public String getAllDriverDocs() {
 //        documentService.getAllTripDocsByDriver(driverUsername from session)
-        return "documents/trip-all";
+        return "documents/trip/all";
     }
 }
