@@ -3,8 +3,7 @@ package truckmanagementproject.web.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 public class AddTripDocumentModel {
 
     private String type;
-    private String picture;
+    private MultipartFile picture;
     private String tripRef;
 
 }

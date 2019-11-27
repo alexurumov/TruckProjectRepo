@@ -20,13 +20,20 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <form th:action="@{/documents/trip/add}" class="col-md-6 mx-auto" method="post">
+                        <th:block th:if="${#lists.isEmpty(trips)}">
+                            <div class="mx-auto">
+                                You must have trips to upload trip documents!!!
+                            </div>
+                        </th:block>
+                        <th:block th:unless="${#lists.isEmpty(trips)}">
+
+                        <form th:action="@{/documents/trip/add}" class="col-md-6 mx-auto" method="post" enctype="multipart/form-data">
                             <div class="modal-body p-0">
                                 <div class="px-3 py-5 px-sm-5">
                                     <div class="tab-content">
                                         <div class="col-md-12 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
 
-                                            <div class="form-group">
+                                            <div class="form-group mb-2">
                                                 <label for="tripDocumentType">Trip Document Type</label>
                                                 <select class="form-control" id="tripDocumentType" name="type">
                                                     <option>CMR</option>
@@ -36,27 +43,26 @@
                                                 </select>
                                             </div>
 
-                                            <div class="form-group">
+                                            <div class="mb-3 form-group">
                                                 <label for="tripPicture">Trip Document Picture</label>
                                                 <input type="file" class="form-control-file" id="tripPicture" name="picture">
                                             </div>
 
-                                            <div class="form-group">
-                                                <label for="tripDocumentTripRef">Trip Document Trip Ref</label>
-                                                <select th:each="trip : ${trips}" class="form-control" id="tripDocumentTripRef" name="tripRef">
-                                                    <option th:text="${trip.reference}"></option>
+                                            <div class="form-group blu-margin">
+                                                <select class="form-control" id="tripRef" name="tripRef">
+                                                    <option value="0">Select Trip Reference ...</option>
+                                                    <option th:each="trip : ${trips}" th:value="${trip.reference}" th:text="${trip.reference}"></option>
                                                 </select>
                                             </div>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mx-auto modal-footer">
-                                <button class="btn btn-block btn-lg btn-primary" type="submit">Add new vehicle</button>
+                                <button class="btn btn-block btn-lg btn-primary" type="submit">Add document</button>
                             </div>
                         </form>
+                        </th:block>
                     </div>
                 </div>
 

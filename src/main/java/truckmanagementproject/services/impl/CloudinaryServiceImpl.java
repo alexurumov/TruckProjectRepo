@@ -2,6 +2,7 @@ package truckmanagementproject.services.impl;
 
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import truckmanagementproject.services.CloudinaryService;
 
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+@Service
 public class CloudinaryServiceImpl implements CloudinaryService {
 
     private final Cloudinary cloudinary;

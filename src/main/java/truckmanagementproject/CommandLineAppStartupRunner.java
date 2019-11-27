@@ -33,6 +33,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
         admin.setPassword(hashingService.hash("Fleetmanageradmin123"));
 
         adminRepository.saveAndFlush(admin);
+
     }
 
 }
