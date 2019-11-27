@@ -61,19 +61,16 @@ public class DocumentController {
             AddTripDocServiceModel tripDoc = mapper.map(addTripDocumentModel, AddTripDocServiceModel.class);
             tripDoc.setPicture(picture);
             documentService.addTripDocument(tripDoc);
-            return "redirect:/documents/trip-all";
+            return "redirect:/documents/trip/all";
 
         } catch (IOException e) {
-            return "redirect:/documents/trip-add";
+            return "redirect:/documents/trip/add";
         }
-
-        //documentService -> addTripDocument
-
     }
 
     @GetMapping("/trip/all")
     public String getAllDriverDocs() {
 //        documentService.getAllTripDocsByDriver(driverUsername from session)
-        return "documents/driver-all";
+        return "documents/trip-all";
     }
 }
