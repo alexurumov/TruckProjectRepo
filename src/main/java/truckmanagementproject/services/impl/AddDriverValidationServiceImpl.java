@@ -3,10 +3,8 @@ package truckmanagementproject.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import truckmanagementproject.data.repositories.users.DriverRepository;
-import truckmanagementproject.data.repositories.users.ManagerRepository;
 import truckmanagementproject.services.AddDriverValidationService;
-import truckmanagementproject.services.models.AddDriverServiceModel;
-import truckmanagementproject.services.models.AddManagerServiceModel;
+import truckmanagementproject.services.models.drivers.AddDriverServiceModel;
 
 @Service
 public class AddDriverValidationServiceImpl implements AddDriverValidationService {

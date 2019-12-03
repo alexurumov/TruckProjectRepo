@@ -4,12 +4,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import truckmanagementproject.data.models.users.Driver;
-import truckmanagementproject.data.models.users.Manager;
 import truckmanagementproject.data.repositories.users.DriverRepository;
 import truckmanagementproject.services.AddDriverValidationService;
 import truckmanagementproject.services.DriverService;
 import truckmanagementproject.services.HashingService;
-import truckmanagementproject.services.models.AddDriverServiceModel;
+import truckmanagementproject.services.models.drivers.AddDriverServiceModel;
+import truckmanagementproject.services.models.drivers.DriverServiceModel;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DriverServiceImpl implements DriverService {
@@ -39,5 +42,13 @@ public class DriverServiceImpl implements DriverService {
         //TODO implement Validator utils and VALIDATE Manager fields before adding to DB
 
         driverRepository.saveAndFlush(driver);
+    }
+
+    @Override
+    public List<DriverServiceModel> getAllDrivers() {
+        return driverRepository.findAll()
+                .stream()
+                .map(driver -> mapper.map(driver, DriverServiceModel.class))
+                .collect(Collectors.toList());
     }
 }

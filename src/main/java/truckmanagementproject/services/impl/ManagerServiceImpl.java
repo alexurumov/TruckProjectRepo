@@ -8,8 +8,7 @@ import truckmanagementproject.data.repositories.users.ManagerRepository;
 import truckmanagementproject.services.AddManagerValidationService;
 import truckmanagementproject.services.HashingService;
 import truckmanagementproject.services.ManagerService;
-import truckmanagementproject.services.models.AddManagerServiceModel;
-import truckmanagementproject.services.models.AddVehicleServiceModel;
+import truckmanagementproject.services.models.managers.AddManagerServiceModel;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {

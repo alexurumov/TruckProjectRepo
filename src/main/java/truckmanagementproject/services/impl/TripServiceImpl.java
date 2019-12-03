@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.services.TripService;
-import truckmanagementproject.services.models.TripServiceModel;
+import truckmanagementproject.services.models.trips.TripServiceModel;
 
 import java.util.List;
 import java.util.stream.Collectors;

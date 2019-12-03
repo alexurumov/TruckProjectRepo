@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import truckmanagementproject.data.models.vehicles.Vehicle;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
 import truckmanagementproject.services.VehicleService;
-import truckmanagementproject.services.models.AddVehicleServiceModel;
+import truckmanagementproject.services.models.vehicles.AddVehicleServiceModel;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {

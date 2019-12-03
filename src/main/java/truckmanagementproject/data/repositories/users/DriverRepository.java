@@ -17,4 +17,6 @@ public interface DriverRepository extends JpaRepository<Driver, String> {
     boolean existsByUsernameAndPassword(String username, String password);
 
     Driver getByUsernameAndPassword(String username, String password);
+
+    Driver getByName(String driverName);
 }

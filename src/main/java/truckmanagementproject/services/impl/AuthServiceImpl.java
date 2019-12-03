@@ -11,7 +11,7 @@ import truckmanagementproject.data.repositories.users.DriverRepository;
 import truckmanagementproject.data.repositories.users.ManagerRepository;
 import truckmanagementproject.services.AuthService;
 import truckmanagementproject.services.HashingService;
-import truckmanagementproject.services.models.LoginUserServiceModel;
+import truckmanagementproject.services.models.auth.LoginUserServiceModel;
 
 @Service
 public class AuthServiceImpl implements AuthService {

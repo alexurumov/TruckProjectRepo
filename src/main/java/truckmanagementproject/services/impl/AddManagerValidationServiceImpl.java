@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import truckmanagementproject.data.repositories.users.ManagerRepository;
 import truckmanagementproject.services.AddManagerValidationService;
-import truckmanagementproject.services.models.AddManagerServiceModel;
+import truckmanagementproject.services.models.managers.AddManagerServiceModel;
 
 @Service
 public class AddManagerValidationServiceImpl implements AddManagerValidationService {

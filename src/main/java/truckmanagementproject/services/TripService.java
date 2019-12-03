@@ -1,6 +1,6 @@
 package truckmanagementproject.services;
 
-import truckmanagementproject.services.models.TripServiceModel;
+import truckmanagementproject.services.models.trips.TripServiceModel;
 
 import java.util.List;
 
