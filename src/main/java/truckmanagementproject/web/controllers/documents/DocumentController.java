@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.*;
+import truckmanagementproject.services.models.documents.AddCompanyDocServiceModel;
 import truckmanagementproject.services.models.documents.AddDriverDocServiceModel;
 import truckmanagementproject.services.models.documents.AddTripDocServiceModel;
 import truckmanagementproject.services.models.documents.AddVehicleDocServiceModel;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
+import truckmanagementproject.web.models.documents.AddCompanyDocumentModel;
 import truckmanagementproject.web.models.documents.AddDriverDocumentModel;
 import truckmanagementproject.web.models.documents.AddTripDocumentModel;
 import truckmanagementproject.web.models.documents.AddVehicleDocumentModel;
@@ -187,21 +189,41 @@ public class DocumentController {
         }
     }
 
+    @GetMapping("/company/add")
+    public ModelAndView getAddCompanyDocPage(ModelAndView modelAndView) {
+        modelAndView.setViewName("documents/company/add");
+        return modelAndView;
+    }
+
+    @PostMapping("company/add")
+    public ModelAndView addCompanyDoc(@ModelAttribute AddCompanyDocumentModel addCompanyDocumentModel, ModelAndView modelAndView) {
+
+        if (!isCompanyDocValid(addCompanyDocumentModel)) {
+            modelAndView.setViewName("documents/company/add");
+            modelAndView.addObject("isValid", false);
+            return modelAndView;
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate expiryDate = LocalDate.parse(addCompanyDocumentModel.getExpiryDate(), formatter);
+            AddCompanyDocServiceModel docServiceModel = mapper.map(addCompanyDocumentModel, AddCompanyDocServiceModel.class);
+            String picture = cloudinaryService.upload(addCompanyDocumentModel.getPicture());
+            docServiceModel.setPicture(picture);
+            docServiceModel.setExpiryDate(expiryDate);
+
+            documentService.addCompanyDocument(docServiceModel);
+
+            modelAndView.setViewName("documents/company/all");
+            return modelAndView;
+        } catch (IOException e) {
+            return new ModelAndView("redirect:/documents/company/add");
+        }
+    }
+
     private boolean isTripDocValid(AddTripDocumentModel addTripDocumentModel) {
         return !addTripDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
                 !addTripDocumentModel.getTripRef().equals("0");
-    }
-
-    private boolean isVehicleDocValid(AddVehicleDocumentModel addVehicleDocumentModel) {
-        if (addVehicleDocumentModel.getExpiryDate().trim().isEmpty()) {
-            return false;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate expiryDate = LocalDate.parse(addVehicleDocumentModel.getExpiryDate(), formatter);
-
-        return
-                !addVehicleDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addVehicleDocumentModel.getRegNumber().equals("0");
     }
 
     private boolean isDriverDocValid(AddDriverDocumentModel addDriverDocumentModel) {
@@ -213,5 +235,28 @@ public class DocumentController {
         return expiryDate.isAfter(LocalDate.now()) &&
                 !addDriverDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
                 !addDriverDocumentModel.getDriverName().equals("0");
+    }
+
+    private boolean isVehicleDocValid(AddVehicleDocumentModel addVehicleDocumentModel) {
+        if (addVehicleDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addVehicleDocumentModel.getExpiryDate(), formatter);
+
+        return  expiryDate.isAfter(LocalDate.now()) &&
+                !addVehicleDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addVehicleDocumentModel.getRegNumber().equals("0");
+    }
+
+    private boolean isCompanyDocValid(AddCompanyDocumentModel addCompanyDocumentModel) {
+        if (addCompanyDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addCompanyDocumentModel.getExpiryDate(), formatter);
+
+        return expiryDate.isAfter(LocalDate.now()) &&
+                !addCompanyDocumentModel.getPicture().getOriginalFilename().isEmpty();
     }
 }
