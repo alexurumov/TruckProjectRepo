@@ -18,7 +18,7 @@ public class TripExpense extends Expense {
 
     @Column(name = "trip_expense_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TripExpenseType tripExpenseType;
+    private TripExpenseType type;
 
     @Column(name = "date", nullable = false)
     private LocalDate date;

@@ -29,4 +29,6 @@ public class TripServiceImpl implements TripService {
                 .map(trip -> mapper.map(trip, TripServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+
 }

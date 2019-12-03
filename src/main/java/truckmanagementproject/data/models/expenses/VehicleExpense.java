@@ -17,7 +17,7 @@ public class VehicleExpense extends Expense {
 
     @Column(name = "truck_expense_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private VehicleExpenseType truckExpenseType;
+    private VehicleExpenseType type;
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
