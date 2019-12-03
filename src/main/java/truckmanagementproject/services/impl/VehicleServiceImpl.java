@@ -7,6 +7,10 @@ import truckmanagementproject.data.models.vehicles.Vehicle;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
 import truckmanagementproject.services.VehicleService;
 import truckmanagementproject.services.models.vehicles.AddVehicleServiceModel;
+import truckmanagementproject.services.models.vehicles.VehicleServiceModel;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -32,5 +36,13 @@ public class VehicleServiceImpl implements VehicleService {
 
         vehicleRepository.saveAndFlush(vehicle);
 
+    }
+
+    @Override
+    public List<VehicleServiceModel> getAllVehicles() {
+        return vehicleRepository.findAll()
+                .stream()
+                .map(vehicle -> mapper.map(vehicle, VehicleServiceModel.class))
+                .collect(Collectors.toList());
     }
 }

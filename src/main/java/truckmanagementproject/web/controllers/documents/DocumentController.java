@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import truckmanagementproject.services.CloudinaryService;
-import truckmanagementproject.services.DocumentService;
-import truckmanagementproject.services.DriverService;
-import truckmanagementproject.services.TripService;
+import truckmanagementproject.services.*;
 import truckmanagementproject.services.models.documents.AddDriverDocServiceModel;
 import truckmanagementproject.services.models.documents.AddTripDocServiceModel;
+import truckmanagementproject.services.models.documents.AddVehicleDocServiceModel;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.documents.AddDriverDocumentModel;
 import truckmanagementproject.web.models.documents.AddTripDocumentModel;
+import truckmanagementproject.web.models.documents.AddVehicleDocumentModel;
 import truckmanagementproject.web.models.drivers.DriverViewModel;
 import truckmanagementproject.web.models.trips.TripViewModel;
+import truckmanagementproject.web.models.vehicles.VehicleViewModel;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -34,14 +34,16 @@ public class DocumentController {
     private final TripService tripService;
     private final DocumentService documentService;
     private final DriverService driverService;
+    private final VehicleService vehicleService;
     private final ModelMapper mapper;
     private final CloudinaryService cloudinaryService;
 
     @Autowired
-    public DocumentController(TripService tripService, DocumentService documentService, DriverService driverService, ModelMapper mapper, CloudinaryService cloudinaryService) {
+    public DocumentController(TripService tripService, DocumentService documentService, DriverService driverService, VehicleService vehicleService, ModelMapper mapper, CloudinaryService cloudinaryService) {
         this.tripService = tripService;
         this.documentService = documentService;
         this.driverService = driverService;
+        this.vehicleService = vehicleService;
         this.mapper = mapper;
         this.cloudinaryService = cloudinaryService;
     }
@@ -63,17 +65,31 @@ public class DocumentController {
     }
 
     @PostMapping("/trip/add")
-    public String addTripDoc(AddTripDocumentModel addTripDocumentModel) {
+    public ModelAndView addTripDoc(AddTripDocumentModel addTripDocumentModel, ModelAndView modelAndView, HttpSession session) {
+        if (!isTripDocValid(addTripDocumentModel)) {
+            LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+            String driverUsername = user.getUsername();
+
+            List<TripViewModel> trips = tripService.getAllTripsByDriver(driverUsername)
+                    .stream()
+                    .map(tr -> mapper.map(tr, TripViewModel.class))
+                    .collect(Collectors.toList());
+            modelAndView.setViewName("/documents/trip/add");
+            modelAndView.addObject("trips", trips);
+            modelAndView.addObject("isValid", false);
+            return modelAndView;
+        }
 
         try {
             String picture = cloudinaryService.upload(addTripDocumentModel.getPicture());
             AddTripDocServiceModel tripDoc = mapper.map(addTripDocumentModel, AddTripDocServiceModel.class);
             tripDoc.setPicture(picture);
             documentService.addTripDocument(tripDoc);
-            return "redirect:/documents/trip/all";
 
+            modelAndView.setViewName("documents/trip/all");
+            return modelAndView;
         } catch (IOException e) {
-            return "redirect:/documents/trip/add";
+            return new ModelAndView("redirect:/documents/trip/add");
         }
     }
 
@@ -98,9 +114,7 @@ public class DocumentController {
     @PostMapping("driver/add")
     public ModelAndView addDriverDoc(@ModelAttribute AddDriverDocumentModel addDriverDocumentModel, ModelAndView modelAndView) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate expiryDate = LocalDate.parse(addDriverDocumentModel.getExpiryDate(), formatter);
-        if (expiryDate.isBefore(LocalDate.now()) || expiryDate.isEqual(LocalDate.now()) || addDriverDocumentModel.getPicture().getOriginalFilename().isEmpty()) {
+        if (!isDriverDocValid(addDriverDocumentModel)) {
             List<DriverViewModel> drivers = driverService.getAllDrivers()
                     .stream()
                     .map(driver -> mapper.map(driver, DriverViewModel.class))
@@ -113,6 +127,8 @@ public class DocumentController {
         }
 
         try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate expiryDate = LocalDate.parse(addDriverDocumentModel.getExpiryDate(), formatter);
             AddDriverDocServiceModel docServiceModel = mapper.map(addDriverDocumentModel, AddDriverDocServiceModel.class);
             String picture = cloudinaryService.upload(addDriverDocumentModel.getPicture());
             docServiceModel.setPicture(picture);
@@ -121,10 +137,81 @@ public class DocumentController {
             documentService.addDriverDocument(docServiceModel);
 
             modelAndView.setViewName("documents/driver/all");
-            modelAndView.addObject("isValid", true);
             return modelAndView;
         } catch (IOException e) {
             return new ModelAndView("redirect:/documents/driver/add");
         }
+    }
+
+    @GetMapping("/vehicle/add")
+    public ModelAndView getAddVehicleDocPage(ModelAndView modelAndView) {
+        modelAndView.setViewName("documents/vehicle/add");
+        List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
+                .stream()
+                .map(driver -> mapper.map(driver, VehicleViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("vehicles", vehicles);
+        return modelAndView;
+    }
+
+    @PostMapping("vehicle/add")
+    public ModelAndView addVehicleDoc(@ModelAttribute AddVehicleDocumentModel addVehicleDocumentModel, ModelAndView modelAndView) {
+
+        if (!isVehicleDocValid(addVehicleDocumentModel)) {
+            List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
+                    .stream()
+                    .map(driver -> mapper.map(driver, VehicleViewModel.class))
+                    .collect(Collectors.toList());
+
+            modelAndView.setViewName("documents/vehicle/add");
+            modelAndView.addObject("vehicles", vehicles);
+            modelAndView.addObject("isValid", false);
+            return modelAndView;
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate expiryDate = LocalDate.parse(addVehicleDocumentModel.getExpiryDate(), formatter);
+            AddVehicleDocServiceModel docServiceModel = mapper.map(addVehicleDocumentModel, AddVehicleDocServiceModel.class);
+            String picture = cloudinaryService.upload(addVehicleDocumentModel.getPicture());
+            docServiceModel.setPicture(picture);
+            docServiceModel.setExpiryDate(expiryDate);
+
+            documentService.addVehicleDocument(docServiceModel);
+
+            modelAndView.setViewName("documents/vehicle/all");
+            return modelAndView;
+        } catch (IOException e) {
+            return new ModelAndView("redirect:/documents/vehicle/add");
+        }
+    }
+
+    private boolean isTripDocValid(AddTripDocumentModel addTripDocumentModel) {
+        return !addTripDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addTripDocumentModel.getTripRef().equals("0");
+    }
+
+    private boolean isVehicleDocValid(AddVehicleDocumentModel addVehicleDocumentModel) {
+        if (addVehicleDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addVehicleDocumentModel.getExpiryDate(), formatter);
+
+        return
+                !addVehicleDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addVehicleDocumentModel.getRegNumber().equals("0");
+    }
+
+    private boolean isDriverDocValid(AddDriverDocumentModel addDriverDocumentModel) {
+        if (addDriverDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addDriverDocumentModel.getExpiryDate(), formatter);
+        return expiryDate.isAfter(LocalDate.now()) &&
+                !addDriverDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addDriverDocumentModel.getDriverName().equals("0");
     }
 }
