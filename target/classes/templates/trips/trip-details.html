@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/header}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="py-5 py-sm-11">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="mx-auto col-md-8">
+                        <div class="card card-body card-project mb-5">
+                            <!--TODO progress bar-->
+                            <!--                            <div class="progress" style="height: .5rem;">-->
+                            <!--                                <div class="progress-bar bg-warning" role="progressbar" style="width: 50%;"-->
+                            <!--                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>-->
+                            <!--                            </div>-->
+                            <div class="row card-body">
+                                <h1> [[${trip.reference}]] </h1>
+                            </div>
+                            <div class="row" style="margin-bottom: 30px; margin-top: 20px;">
+                                <div class="col-6 card-body">
+                                    <h4>Vehicle<br>[[${trip.vehicleRegNumber}]]</h4>
+                                </div>
+                                <div class="col-6 card-body">
+                                    <h4>Date<br>[[${trip.date}]]</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 card-body">
+                                    <h4>Collections</h4><br>
+                                    <ul>
+                                        <th:block th:each="collection : ${trip.collections}">
+
+                                            <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                                <button type="button" class="btn" data-toggle="modal"
+                                                        data-target="#exampleModal">[[${collection.name}]]
+                                                </button>
+                                            </li>
+                                        </th:block>
+                                        <a class="btn btn-block1 btn-sm btn-primary"
+                                           th:href="@{'/trips/add-collection/' + ${trip.reference}}">+ Collection</a>
+                                    </ul>
+                                </div>
+                                <div class="col-6 card-body">
+                                    <h4>Deliveries </h4><br>
+                                    <ul>
+                                        <th:block th:each="delivery : ${trip.deliveries}">
+
+                                            <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                                <button type="button" class="btn" data-toggle="modal"
+                                                        data-target="#exampleModal">[[${delivery.name}]]
+                                                </button>
+                                            </li>
+                                        </th:block>
+                                        <a class="btn btn-block1 btn-sm btn-primary"
+                                           th:href="@{'/trips/add-delivery/' + ${trip.reference}}">+ Delivery</a>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 20px;">
+                                <div class="col-6 card-body"> ADR<br>
+                                    <th:block th:if="${trip.adr == true}">
+                                        yes
+                                    </th:block>
+                                    <th:block th:unless="${trip.adr == true}">
+                                        no
+                                    </th:block>
+                                </div>
+                                <div class="col-6 card-body"> Driver<br>[[${trip.driverName}]]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+
+</body>
+</html>
