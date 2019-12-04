@@ -126,7 +126,7 @@ public class TripController {
         TripViewModel trip = mapper.map(tripModel, TripViewModel.class);
         List<MilestoneViewModel> collections = tripModel.getMilestones()
                 .stream()
-                .filter(milestone -> milestone.getMilestoneType().equals("Collecion"))
+                .filter(milestone -> milestone.getMilestoneType().equals("Collection"))
                 .map(milestone -> mapper.map(milestone, MilestoneViewModel.class))
                 .collect(Collectors.toList());
 
@@ -151,14 +151,66 @@ public class TripController {
     }
 
     @PostMapping("/add-collection/{reference}")
-    public ModelAndView addCollection(@ModelAttribute AddMilestoneModel addMilestoneModel, @PathVariable String reference) {
-        //validate
-        //if Valid =>
-        MilestoneServiceModel collection = mapper.map(addMilestoneModel, MilestoneServiceModel.class);
-        collection.setMilestoneType("Collection");
-        collection.setTripReference(reference);
-        milestoneService.addCollection(collection);
-        return new ModelAndView("redirect:/trips/details/" + reference);
+    public ModelAndView addCollection(@ModelAttribute AddMilestoneModel addMilestoneModel,
+                                      @PathVariable String reference,
+                                      ModelAndView modelAndView,
+                                      HttpSession session) {
+
+        if (!isMilestoneValid(addMilestoneModel)) {
+            session.setAttribute("reference", reference);
+            modelAndView.addObject("isValid", false);
+            modelAndView.setViewName("trips/add-collection");
+            return modelAndView;
+        }
+
+        try {
+            MilestoneServiceModel collection = mapper.map(addMilestoneModel, MilestoneServiceModel.class);
+            collection.setMilestoneType("Collection");
+            collection.setTripReference(reference);
+            milestoneService.addCollection(collection);
+            modelAndView.setViewName("redirect:/trips/details/" + reference);
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/trips/details/" + reference);
+        }
+    }
+
+    @GetMapping("/add-delivery/{reference}")
+    public ModelAndView getAddDeliveryPage (@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
+        session.setAttribute("reference", reference);
+        modelAndView.setViewName("/trips/add-delivery");
+        return modelAndView;
+    }
+
+    @PostMapping("/add-delivery/{reference}")
+    public ModelAndView addDelivery(@ModelAttribute AddMilestoneModel addMilestoneModel,
+                                      @PathVariable String reference,
+                                      ModelAndView modelAndView,
+                                      HttpSession session) {
+
+        if (!isMilestoneValid(addMilestoneModel)) {
+            session.setAttribute("reference", reference);
+            modelAndView.addObject("isValid", false);
+            modelAndView.setViewName("trips/add-delivery");
+            return modelAndView;
+        }
+
+        try {
+            MilestoneServiceModel delivery = mapper.map(addMilestoneModel, MilestoneServiceModel.class);
+            delivery.setMilestoneType("Delivery");
+            delivery.setTripReference(reference);
+            milestoneService.addCollection(delivery);
+            modelAndView.setViewName("redirect:/trips/details/" + reference);
+            return modelAndView;
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/trips/details/" + reference);
+        }
+    }
+
+    private boolean isMilestoneValid(AddMilestoneModel addMilestoneModel) {
+        return !addMilestoneModel.getName().trim().isEmpty() &&
+                !addMilestoneModel.getAddress().trim().isEmpty() &&
+                !addMilestoneModel.getDetails().trim().isEmpty();
     }
 
     private boolean isAddTripModelValid(AddTripModel addTripModel) {
