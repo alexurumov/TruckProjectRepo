@@ -26,6 +26,15 @@
                 <th:block th:unless="${#lists.isEmpty(drivers) || #lists.isEmpty(vehicles)}">
 
                     <form class="col-md-12 mx-auto" th:action="@{/trips/add}" method="post">
+
+                        <!--Alert popup message for invalid input!-->
+                        <th:block th:if="${isValid == false}">
+                            <div class="alert alert-danger alert-dismissible" role="alertdialog">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                Invalid input!
+                            </div>
+                        </th:block>
+
                         <div class="card card-body card-project mb-3">
                             <div class="row">
                                 <div class="col-md-6 card-body">
@@ -92,6 +101,26 @@
 </div>
 
 <th:block th:include="~{fragments/navbar-footer}"/>
+
+<!-- Include jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<script>
+    $(document).ready(function(){
+        var date_input=$('input[name="date"]'); //our date input has the name "date"
+        var container=$('.container form date').length>0 ? $('.container form date').parent() : "body";
+        date_input.datepicker({
+            format: 'dd/mm/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+        })
+    })
+</script>
 
 </body>
 </html>
