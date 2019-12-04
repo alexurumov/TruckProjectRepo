@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import truckmanagementproject.data.models.users.Admin;
 import truckmanagementproject.data.repositories.users.AdminRepository;
-import truckmanagementproject.services.HashingService;
+import truckmanagementproject.services.services.hashing.HashingService;
 
 
 @Component

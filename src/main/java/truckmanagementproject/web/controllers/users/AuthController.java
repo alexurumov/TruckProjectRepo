@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import truckmanagementproject.services.AuthService;
+import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.models.auth.LoginUserServiceModel;
 import truckmanagementproject.web.models.auth.LoginUserModel;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;

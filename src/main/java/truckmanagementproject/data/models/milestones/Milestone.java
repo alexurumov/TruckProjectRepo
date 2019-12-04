@@ -34,9 +34,6 @@ public class Milestone extends BaseEntity {
     @Column(name = "details")
     private String details;
 
-    @Column(name = "deadline")
-    private LocalDateTime deadline;
-
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status = Status.OnTheWay;

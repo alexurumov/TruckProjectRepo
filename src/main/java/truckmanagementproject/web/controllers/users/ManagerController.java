@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import truckmanagementproject.services.ManagerService;
+import truckmanagementproject.services.services.managers.ManagerService;
 import truckmanagementproject.services.models.managers.AddManagerServiceModel;
 import truckmanagementproject.web.models.managers.AddManagerModel;
 

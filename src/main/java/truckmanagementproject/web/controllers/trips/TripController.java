@@ -4,18 +4,23 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import truckmanagementproject.services.DriverService;
-import truckmanagementproject.services.TripService;
-import truckmanagementproject.services.VehicleService;
+import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
+import truckmanagementproject.services.services.drivers.DriverService;
+import truckmanagementproject.services.services.milestones.MilestoneService;
+import truckmanagementproject.services.services.trips.TripService;
+import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
+import truckmanagementproject.services.models.trips.TripServiceModel;
 import truckmanagementproject.web.models.drivers.DriverViewModel;
+import truckmanagementproject.web.models.milestones.AddMilestoneModel;
+import truckmanagementproject.web.models.milestones.MilestoneViewModel;
 import truckmanagementproject.web.models.trips.AddTripModel;
+import truckmanagementproject.web.models.trips.TripViewModel;
 import truckmanagementproject.web.models.vehicles.VehicleViewModel;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -24,22 +29,25 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/trips")
 public class TripController {
 
     private final DriverService driverService;
     private final VehicleService vehicleService;
     private final TripService tripService;
+    private final MilestoneService milestoneService;
     private final ModelMapper mapper;
 
     @Autowired
-    public TripController(DriverService driverService, VehicleService vehicleService, TripService tripService, ModelMapper mapper) {
+    public TripController(DriverService driverService, VehicleService vehicleService, TripService tripService, MilestoneService milestoneService, ModelMapper mapper) {
         this.driverService = driverService;
         this.vehicleService = vehicleService;
         this.tripService = tripService;
+        this.milestoneService = milestoneService;
         this.mapper = mapper;
     }
 
-    @GetMapping("/trips/add")
+    @GetMapping("/add")
     public ModelAndView getTripAddForm(ModelAndView modelAndView) {
         List<DriverViewModel> drivers = driverService.getAllDrivers()
                 .stream()
@@ -57,7 +65,7 @@ public class TripController {
         return modelAndView;
     }
 
-    @PostMapping("/trips/add")
+    @PostMapping("/add")
     public ModelAndView tripAdd(@ModelAttribute AddTripModel addTripModel,
                                 ModelAndView modelAndView,
                                 BindingResult bindingResult) {
@@ -87,7 +95,70 @@ public class TripController {
 
         tripService.addTrip(tripServiceModel);
 
-        return new ModelAndView("trips/all-current");
+        return new ModelAndView("redirect:/trips/current");
+    }
+
+    @GetMapping("/current")
+    public ModelAndView getAllCurrentTrips(ModelAndView modelAndView) {
+
+        List<TripViewModel> trips = tripService.getAllCurrent()
+                .stream()
+                .map(trip -> mapper.map(trip, TripViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("trips", trips);
+        modelAndView.setViewName("trips/all-current");
+        return modelAndView;
+    }
+
+    //TODO
+    @GetMapping("/finished")
+    public ModelAndView getAllFinishedTrips(ModelAndView modelAndView) {
+        modelAndView.setViewName("trips/all-finished");
+        return modelAndView;
+    }
+
+    //TODO
+    @GetMapping("/details/{reference}")
+    public ModelAndView getTripDetails(@PathVariable String reference, ModelAndView modelAndView) {
+
+        TripServiceModel tripModel = tripService.getTripByReference(reference);
+        TripViewModel trip = mapper.map(tripModel, TripViewModel.class);
+        List<MilestoneViewModel> collections = tripModel.getMilestones()
+                .stream()
+                .filter(milestone -> milestone.getMilestoneType().equals("Collecion"))
+                .map(milestone -> mapper.map(milestone, MilestoneViewModel.class))
+                .collect(Collectors.toList());
+
+        List<MilestoneViewModel> deliveries = tripModel.getMilestones()
+                .stream()
+                .filter(milestone -> milestone.getMilestoneType().equals("Delivery"))
+                .map(milestone -> mapper.map(milestone, MilestoneViewModel.class))
+                .collect(Collectors.toList());
+
+        trip.setCollections(collections);
+        trip.setDeliveries(deliveries);
+        modelAndView.addObject("trip", trip);
+        modelAndView.setViewName("trips/trip-details");
+        return modelAndView;
+    }
+
+    @GetMapping("/add-collection/{reference}")
+    public ModelAndView getAddCollectionPage (@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
+        session.setAttribute("reference", reference);
+        modelAndView.setViewName("/trips/add-collection");
+        return modelAndView;
+    }
+
+    @PostMapping("/add-collection/{reference}")
+    public ModelAndView addCollection(@ModelAttribute AddMilestoneModel addMilestoneModel, @PathVariable String reference) {
+        //validate
+        //if Valid =>
+        MilestoneServiceModel collection = mapper.map(addMilestoneModel, MilestoneServiceModel.class);
+        collection.setMilestoneType("Collection");
+        collection.setTripReference(reference);
+        milestoneService.addCollection(collection);
+        return new ModelAndView("redirect:/trips/details/" + reference);
     }
 
     private boolean isAddTripModelValid(AddTripModel addTripModel) {
@@ -101,15 +172,5 @@ public class TripController {
                 !addTripModel.getDriverName().equals("0") &&
                 !addTripModel.getDate().trim().isEmpty() &&
                 !addTripModel.getVehicleRegNumber().equals("0");
-    }
-
-    @GetMapping("/trips/current")
-    public String getAllCurrentTrips() {
-        return "all-current";
-    }
-
-    @GetMapping("/trips/finished")
-    public String getAllFinishedTrips() {
-        return "trips/all-finished-trips";
     }
 }
