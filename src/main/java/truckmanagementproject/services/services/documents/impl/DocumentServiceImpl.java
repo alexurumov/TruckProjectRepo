@@ -17,11 +17,12 @@ import truckmanagementproject.data.repositories.documents.VehicleDocumentReposit
 import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.data.repositories.users.DriverRepository;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
+import truckmanagementproject.services.models.documents.*;
 import truckmanagementproject.services.services.documents.DocumentService;
-import truckmanagementproject.services.models.documents.AddCompanyDocServiceModel;
-import truckmanagementproject.services.models.documents.AddDriverDocServiceModel;
-import truckmanagementproject.services.models.documents.AddTripDocServiceModel;
-import truckmanagementproject.services.models.documents.AddVehicleDocServiceModel;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -75,5 +76,35 @@ public class DocumentServiceImpl implements DocumentService {
     public void addCompanyDocument(AddCompanyDocServiceModel docServiceModel) {
         CompanyDocument document = mapper.map(docServiceModel, CompanyDocument.class);
         companyDocumentRepository.saveAndFlush(document);
+    }
+
+    @Override
+    public List<TripDocumentServiceModel> getAllTripDocs() {
+        return tripDocumentRepository.findAll()
+                .stream()
+                .map(doc -> mapper.map(doc, TripDocumentServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TripDocumentServiceModel> getAllTripDocsByDriver(String username) {
+        return tripDocumentRepository.getAllByTripDriverUsername(username)
+                .stream()
+                .map(doc -> mapper.map(doc, TripDocumentServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TripDocumentServiceModel> getAllTripDocsByTrip(String reference) {
+        return tripDocumentRepository.getAllByTripReference(reference)
+                .stream()
+                .map(doc -> mapper.map(doc, TripDocumentServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeTripDocument(String id) {
+        tripDocumentRepository.deleteById(id);
     }
 }

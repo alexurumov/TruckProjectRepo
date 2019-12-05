@@ -1,9 +1,8 @@
 package truckmanagementproject.services.services.documents;
 
-import truckmanagementproject.services.models.documents.AddCompanyDocServiceModel;
-import truckmanagementproject.services.models.documents.AddDriverDocServiceModel;
-import truckmanagementproject.services.models.documents.AddTripDocServiceModel;
-import truckmanagementproject.services.models.documents.AddVehicleDocServiceModel;
+import truckmanagementproject.services.models.documents.*;
+
+import java.util.List;
 
 public interface DocumentService {
     void addTripDocument(AddTripDocServiceModel model);
@@ -13,4 +12,12 @@ public interface DocumentService {
     void addVehicleDocument(AddVehicleDocServiceModel docServiceModel);
 
     void addCompanyDocument(AddCompanyDocServiceModel docServiceModel);
+
+    List<TripDocumentServiceModel> getAllTripDocs();
+
+    List<TripDocumentServiceModel> getAllTripDocsByDriver(String username);
+
+    List<TripDocumentServiceModel> getAllTripDocsByTrip(String reference);
+
+    void removeTripDocument(String id);
 }
