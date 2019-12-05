@@ -281,11 +281,29 @@ public class DocumentController {
 
             documentService.addCompanyDocument(docServiceModel);
 
-            modelAndView.setViewName("documents/company/all");
+            modelAndView.setViewName("redirect:/documents/company/all");
             return modelAndView;
         } catch (IOException e) {
             return new ModelAndView("redirect:/documents/company/add");
         }
+    }
+
+    @GetMapping("/company/all")
+    public ModelAndView getAllCompanyDocs(ModelAndView modelAndView, HttpSession session) {
+
+        List<CompanyDocumentViewModel> documents = documentService.getAllCompanyDocs()
+                .stream()
+                .map(doc -> mapper.map(doc, CompanyDocumentViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("documents", documents);
+        modelAndView.setViewName("documents/company/all");
+        return modelAndView;
+    }
+
+    @GetMapping("/company/remove/{id}")
+    public ModelAndView removeCompanyDoc(@PathVariable String id) {
+        documentService.removeCompanyDocument(id);
+        return new ModelAndView("redirect:/documents/company/all");
     }
 
     private boolean isTripDocValid(AddTripDocumentModel addTripDocumentModel) {

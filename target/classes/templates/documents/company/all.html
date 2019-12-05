@@ -19,20 +19,24 @@
                             <thead>
                             <tr>
                                 <th>Type</th>
-                                <th>Trip Reference</th>
+                                <th>Expiry Date</th>
                                 <th>Picture</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <th:block th:each="document : ${documents}">
                                 <tr>
-                                    <td>[[${trip.vehicleRegNumber}]]</td>
-                                    <td>[[${trip.date}]]</td>
-                                    <td>[[${trip.direction}]]</td>
-                                    <td>[[${trip.driverName}]]</td>
+                                    <td>[[${document.type}]]</td>
+                                    <td>[[${document.expiryDate}]]</td>
                                     <td>
                                         <a class="btn btn-block1 btn-sm btn-primary"
-                                           th:href="@{'/trips/details/' + ${trip.reference}}">Details</a>
+                                           th:href="@{${document.picture}}">Link to Picture</a>
+                                    </td>
+                                    <td>
+                                        <a th:href="'/documents/company/remove/' + ${document.id}"
+                                           class="btn btn-block1 btn-sm btn-danger">Remove
+                                        </a>
                                     </td>
                                 </tr>
                             </th:block>
