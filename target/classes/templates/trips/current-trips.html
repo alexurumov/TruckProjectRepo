@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Fleet Manager</title>
+    <meta name="description" content="#">
+    <link rel="stylesheet" href="dist/css/grayshift.css">
+    <link rel="stylesheet" href="dist/css/taskwell.css">
+    <link rel="javascript" href="dist/css/pie.js">
+</head>
+
+<body>
+<div class="d-xl-flex">
+
+    <nav class="navbar navbar-expand-xl sticky-top">
+        <div class="container">
+            <a rel="home" href="/home">
+                <i class="eva-xl" data-eva="github" data-eva-animation="pulse"></i>
+            </a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" type="button"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle Navigation">
+                <i class="eva-md" data-eva="menu"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownManagers" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Vehicles
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                            <a class="dropdown-item" href="/Vehicles/add">Add Trip</a>
+                            <a class="dropdown-item" href="/Vehicles/current">Current Vehicles</a>
+                            <a class="dropdown-item" href="/Vehicles/finished">Finished Vehicles</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownVehicles" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Managers
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                            <a class="dropdown-item" href="/managers/add">Add Manager</a>
+                            <a class="dropdown-item" href="/managers/all">All Managers</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownVehicles" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Vehicles
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownVehicles">
+                            <a class="dropdown-item" href="/Vehicles/add">Add Vehicle</a>
+                            <a class="dropdown-item" href="/Vehicles/all">All Vehicles</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownVehicles" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Vehicles
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownVehicles">
+                            <a class="dropdown-item" href="/vehicles/add">Add Vehicle</a>
+                            <a class="dropdown-item" href="/vehicles/all">All Vehicles</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownDocuments" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Documents
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownDocuments">
+                            <a class="dropdown-item" href="/documents/add">Add New Document</a>
+                            <a class="dropdown-item" href="/documents/expiring">Expiring Documents</a>
+                            <a class="dropdown-item" href="/documents/all">All Documents</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownExpenses" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Expenses
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                            <a class="dropdown-item" href="/expenses/add">Add Expense</a>
+                            <a class="dropdown-item" href="/expenses/all">All Expenses</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownSummary" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Summary
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                            <a class="dropdown-item" href="/summary/overall">Overall</a>
+                            <a class="dropdown-item" href="/summary/by-truck">By truck</a>
+                            <a class="dropdown-item" href="/summary/by-Vehicle">By Vehicle</a>
+                        </div>
+                    </li>
+                </ul>
+                <hr class="w-100">
+                <div>
+                    <span class="avatar avatar-md h5 bg-primary rounded-circle">ik</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-xl-grow-1">
+        <div class="py-5 py-sm-11">
+            <div class="container"><br><br>
+                <div class="row align-items-center">
+
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="card card-body card-project mb-5">
+                            <div class="progress" style="height: .5rem;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 50%;"
+                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="row card-body">
+                                <h1> Trip London </h1></div>
+                            <div class="row" style="margin-bottom: 30px; margin-top: 20px;">
+                                <div class="col-6 card-body">
+                                    <h4>Vehicle<br>E1010KM</h4>
+                                </div>
+                                <div class="col-6 card-body">
+                                    <h4>Date<br>01.01.2019</h4>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-6 card-body">
+                                    <h4>Collections</h4><br>
+
+
+                                    <ul>
+
+                                        <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 1
+                                            </button>
+                                        </li>
+                                        <li><i class="mr-3 fill-warning" data-eva="car-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 2
+                                            </button>
+                                        </li>
+                                        <li><i class="mr-3 fill-danger" data-eva="cube-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 3
+                                            </button>
+                                        </li>
+                                        <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 4
+                                            </button>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                                <div class="col-6 card-body">
+                                    <h4>Delivery </h4><br>
+                                    <ul>
+
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 1
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 2
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 3
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 4
+                                            </button>
+                                        </li>
+
+
+                                    </ul>
+
+                                </div>
+
+
+                            </div>
+                            <div class="row" style="margin-top: 20px;">
+
+                                <div class="col-4 card-body"> Referance<br> 123123123</div>
+                                <div class="col-4 card-body"> ADR<br> YES</div>
+                                <div class="col-4 card-body"> Driver<br>Gosho Petkov</div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="card card-body card-project mb-5">
+                            <div class="progress" style="height: .5rem;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%;"
+                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="row card-body">
+                                <h1> Trip London </h1></div>
+                            <div class="row" style="margin-bottom: 30px; margin-top: 20px;">
+                                <div class="col-6 card-body">
+                                    <h4>Vehicle<br>E1010KM</h4>
+                                </div>
+                                <div class="col-6 card-body">
+                                    <h4>Date<br>01.01.2019</h4>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-6 card-body">
+                                    <h4>Collections</h4><br>
+
+
+                                    <ul>
+
+                                        <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 1
+                                            </button>
+                                        </li>
+                                        <li><i class="mr-3 fill-warning" data-eva="car-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 2
+                                            </button>
+                                        </li>
+                                        <li><i class="mr-3 fill-danger" data-eva="cube-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 3
+                                            </button>
+                                        </li>
+                                        <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Collection 4
+                                            </button>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                                <div class="col-6 card-body">
+                                    <h4>Delivery </h4><br>
+                                    <ul>
+
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 1
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 2
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 3
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn" data-toggle="modal"
+                                                    data-target="#exampleModal">Delivery 4
+                                            </button>
+                                        </li>
+
+
+                                    </ul>
+
+                                </div>
+
+
+                            </div>
+                            <div class="row" style="margin-top: 20px;">
+
+                                <div class="col-4 card-body"> Referance<br> 123123123</div>
+                                <div class="col-4 card-body"> ADR<br> YES</div>
+                                <div class="col-4 card-body"> Driver<br>Gosho Petkov</div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header card-body">
+                            <h5 class="modal-title" id="exampleModalLabel">More Information</h5>
+                            <button type="button" class="btn btn-sm btn-circle btn-neutral align-self-start"
+                                    data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row card-body">
+
+                                <div class="col-4 card-body">Collection name<br>London</div>
+                                <div class="col-4 card-body">Type of collection<br>Depot</div>
+                                <div class="col-4 card-body">Status<br> On the way</div>
+                            </div>
+                            <div class="row card card-body">
+                                <div class="col-6 ">
+                                    <h3>Address</h3><br><br><br>
+                                    <div class="row card-body">
+                                        <p>Full adress<br>Lupus St, Pimlico, London SW1V 3AT, United Kingdom</p>
+                                    </div>
+                                </div>
+                                <div class="col-6  ">
+                                    <h3> Details</h3><br><br><br>
+                                    <div class="row card-body">
+                                        <p>
+                                        <ul>
+
+                                            <li>- 1</li>
+                                            <li>- 1</li>
+                                            <li>- 1</li>
+                                            <li>- 1</li>
+
+
+                                        </ul>
+
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row modal-footer">
+                            <button type="button" class="btn btn-block1 btn-sm btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" class="btn btn-block1 btn-sm btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    </main>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+        integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/eva-icons@1.1.1/eva.min.js"
+        integrity="sha384-m76M9FZUsYkrBUkI7xVlheH3b+8fhrmj3NW/7DRvtsjYv+vvwft9NB/rilorriCM"
+        crossorigin="anonymous"></script>
+<script>
+    eva.replace()
+</script>
+</html>
