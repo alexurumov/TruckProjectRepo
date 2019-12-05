@@ -8,7 +8,10 @@ import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.repositories.milestones.MilestoneRepository;
 import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.services.models.milestones.AddMilestoneServiceModel;
+import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.services.milestones.MilestoneService;
+
+import javax.transaction.Transactional;
 
 @Service
 public class MilestoneServiceImpl implements MilestoneService {
@@ -30,5 +33,18 @@ public class MilestoneServiceImpl implements MilestoneService {
         Trip trip = tripRepository.getByReference(collectionModel.getTripReference());
         collection.setTrip(trip);
         milestoneRepository.saveAndFlush(collection);
+    }
+
+    @Override
+    @Transactional
+    public void updateMilestone(String id) {
+        Milestone one = milestoneRepository.getById(id);
+        one.setIsFinished(true);
+        milestoneRepository.saveAndFlush(one);
+    }
+
+    @Override
+    public MilestoneServiceModel getById(String id) {
+        return mapper.map(milestoneRepository.getById(id), MilestoneServiceModel.class);
     }
 }

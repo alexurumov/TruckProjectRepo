@@ -43,13 +43,25 @@
                                     <h4>Collections: </h4><br>
                                     <ul>
                                         <th:block th:each="collection : ${trip.collections}">
-                                            <li><i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
-                                                [[${collection.name}]]
+                                            <li>
+                                                <th:block th:if="${collection.isFinished == true}">
+                                                    <i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                                    [[${collection.name}]]
+                                                </th:block>
+                                                <th:block th:unless="${collection.isFinished == true}">
+                                                    <i class="mr-3 fill-warning" data-eva="car-outline"></i>
+                                                    [[${collection.name}]]
+                                                    <th:block th:if="${session.user.role == 'Driver'}">
+                                                    <a class="btn btn-success btn-sm float-sm-right"
+                                                       th:href="@{'/trips/finish-milestone/' + ${collection.id}}"></a>
+                                                    </th:block>
+                                                </th:block>
                                             </li>
                                         </th:block>
                                         <a class="btn btn-block1 btn-sm btn-primary"
                                            th:href="@{'/trips/add-collection/' + ${trip.reference}}">+ Collection</a>
-                                        <button type="button" class="btn btn-block1 btn-sm btn-primary" data-toggle="modal"
+                                        <button type="button" class="btn btn-block1 btn-sm btn-primary"
+                                                data-toggle="modal"
                                                 data-target="#moreInfoCollectionsModal">
                                             More Info
                                         </button>
@@ -83,14 +95,20 @@
                                     <h4>Deliveries: </h4><br>
                                     <ul>
                                         <th:block th:each="delivery : ${trip.deliveries}">
-                                            <li><i class="mr-3 fill-warning" data-eva="car-outline"></i>
-<!--                                                <i class="mr-3 fill-success" data-eva="checkmark-outline"></i>-->
+                                            <li>
+                                                <th:block th:if="${delivery.isFinished == true}">
+                                                    <i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                                </th:block>
+                                                <th:block th:unless="${delivery.isFinished == true}">
+                                                    <i class="mr-3 fill-warning" data-eva="car-outline"></i>
+                                                </th:block>
                                                 [[${delivery.name}]]
                                             </li>
                                         </th:block>
                                         <a class="btn btn-block1 btn-sm btn-primary"
                                            th:href="@{'/trips/add-delivery/' + ${trip.reference}}">+ Delivery</a>
-                                        <button type="button" class="btn btn-block1 btn-sm btn-primary" data-toggle="modal"
+                                        <button type="button" class="btn btn-block1 btn-sm btn-primary"
+                                                data-toggle="modal"
                                                 data-target="#moreInfoDeliveriesModal">
                                             More Info
                                         </button>

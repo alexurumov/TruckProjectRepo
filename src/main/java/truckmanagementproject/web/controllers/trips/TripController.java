@@ -208,6 +208,13 @@ public class TripController {
         }
     }
 
+    @GetMapping("/finish-milestone/{id}")
+    private String finishMilestone(@PathVariable String id) {
+        milestoneService.updateMilestone(id);
+        String reference = milestoneService.getById(id).getTripReference();
+        return "redirect:/trips/details/" + reference;
+    }
+
     private boolean isMilestoneValid(AddMilestoneModel addMilestoneModel) {
         return !addMilestoneModel.getName().trim().isEmpty() &&
                 !addMilestoneModel.getAddress().trim().isEmpty() &&

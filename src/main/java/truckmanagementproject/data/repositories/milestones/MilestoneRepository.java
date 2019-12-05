@@ -6,5 +6,5 @@ import truckmanagementproject.data.models.milestones.Milestone;
 
 @Repository
 public interface MilestoneRepository extends JpaRepository<Milestone, String> {
-
+    Milestone getById(String id);
 }
