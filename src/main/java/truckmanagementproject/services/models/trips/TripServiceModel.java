@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -17,5 +18,10 @@ public class TripServiceModel {
     private String driverName;
     private String reference;
     private Boolean adr;
+    private Integer emptyKm;
+    private Integer tripKm;
+    private BigDecimal expensesSum;
+    private Integer emptyPallets;
+    private Boolean isFinished;
     private List<MilestoneServiceModel> milestones;
 }

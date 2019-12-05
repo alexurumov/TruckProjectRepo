@@ -3,6 +3,7 @@ package truckmanagementproject.services.services.trips.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import truckmanagementproject.data.models.expenses.Expense;
 import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
@@ -14,6 +15,7 @@ import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,18 @@ public class TripServiceImpl implements TripService {
         return tripRepository.findAll()
                 .stream()
                 .filter(trip -> !trip.getIsFinished())
-                .map(tr -> mapper.map(tr, TripServiceModel.class))
+                .map(trip -> {
+                    TripServiceModel model = mapper.map(trip, TripServiceModel.class);
+                    List<MilestoneServiceModel> milestones = trip.getMilestones()
+                            .stream()
+                            .map(milestone -> mapper.map(milestone, MilestoneServiceModel.class))
+                            .collect(Collectors.toList());
+
+                    model.setMilestones(milestones);
+                    BigDecimal expenses = trip.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+                    model.setExpensesSum(expenses);
+                    return model;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -77,6 +90,10 @@ public class TripServiceImpl implements TripService {
                 .collect(Collectors.toList());
 
         tripModel.setMilestones(milestones);
+
+        BigDecimal expenses = trip.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        tripModel.setExpensesSum(expenses);
+
         return tripModel;
     }
 }
