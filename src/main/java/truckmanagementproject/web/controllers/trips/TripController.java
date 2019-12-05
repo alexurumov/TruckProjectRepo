@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import truckmanagementproject.services.models.milestones.AddMilestoneServiceModel;
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.services.drivers.DriverService;
 import truckmanagementproject.services.services.milestones.MilestoneService;
@@ -164,7 +165,7 @@ public class TripController {
         }
 
         try {
-            MilestoneServiceModel collection = mapper.map(addMilestoneModel, MilestoneServiceModel.class);
+            AddMilestoneServiceModel collection = mapper.map(addMilestoneModel, AddMilestoneServiceModel.class);
             collection.setMilestoneType("Collection");
             collection.setTripReference(reference);
             milestoneService.addCollection(collection);
@@ -196,7 +197,7 @@ public class TripController {
         }
 
         try {
-            MilestoneServiceModel delivery = mapper.map(addMilestoneModel, MilestoneServiceModel.class);
+            AddMilestoneServiceModel delivery = mapper.map(addMilestoneModel, AddMilestoneServiceModel.class);
             delivery.setMilestoneType("Delivery");
             delivery.setTripReference(reference);
             milestoneService.addCollection(delivery);

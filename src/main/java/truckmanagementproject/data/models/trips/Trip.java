@@ -8,7 +8,6 @@ import truckmanagementproject.data.models.documents.TripDocument;
 import truckmanagementproject.data.models.expenses.Expense;
 import truckmanagementproject.data.models.expenses.TripExpense;
 import truckmanagementproject.data.models.milestones.Milestone;
-import truckmanagementproject.data.models.milestones.Status;
 import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
 

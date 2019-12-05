@@ -34,9 +34,8 @@ public class Milestone extends BaseEntity {
     @Column(name = "details")
     private String details;
 
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.OnTheWay;
+    @Column(name = "is_finished", nullable = false)
+    private Boolean isFinished = false;
 
     @ManyToOne
     @JoinColumn(name = "trip_id", referencedColumnName = "id")

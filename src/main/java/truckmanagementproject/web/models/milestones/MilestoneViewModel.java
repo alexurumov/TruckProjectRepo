@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class MilestoneViewModel {
+    private String id;
     private String milestoneType;
     private String locationType;
     private String name;
     private String address;
     private String details;
-    private String status;
+    private Boolean isFinished;
     private String tripReference;
 }

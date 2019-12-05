@@ -7,8 +7,8 @@ import truckmanagementproject.data.models.milestones.Milestone;
 import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.repositories.milestones.MilestoneRepository;
 import truckmanagementproject.data.repositories.trips.TripRepository;
+import truckmanagementproject.services.models.milestones.AddMilestoneServiceModel;
 import truckmanagementproject.services.services.milestones.MilestoneService;
-import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 
 @Service
 public class MilestoneServiceImpl implements MilestoneService {
@@ -25,7 +25,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     }
 
     @Override
-    public void addCollection(MilestoneServiceModel collectionModel) {
+    public void addCollection(AddMilestoneServiceModel collectionModel) {
         Milestone collection = mapper.map(collectionModel, Milestone.class);
         Trip trip = tripRepository.getByReference(collectionModel.getTripReference());
         collection.setTrip(trip);
