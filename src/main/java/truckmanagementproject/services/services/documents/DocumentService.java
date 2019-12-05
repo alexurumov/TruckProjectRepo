@@ -20,4 +20,9 @@ public interface DocumentService {
     List<TripDocumentServiceModel> getAllTripDocsByTrip(String reference);
 
     void removeTripDocument(String id);
+
+    List<VehicleDocumentServiceModel> getAllVehicleDocs();
+
+    void removeVehicleDocument(String id);
+
 }

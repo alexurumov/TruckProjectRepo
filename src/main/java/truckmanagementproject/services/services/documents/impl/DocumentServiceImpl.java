@@ -107,4 +107,18 @@ public class DocumentServiceImpl implements DocumentService {
     public void removeTripDocument(String id) {
         tripDocumentRepository.deleteById(id);
     }
+
+    @Override
+    public List<VehicleDocumentServiceModel> getAllVehicleDocs() {
+        return vehicleDocumentRepository.findAll()
+                .stream()
+                .map(doc -> mapper.map(doc, VehicleDocumentServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeVehicleDocument(String id) {
+        vehicleDocumentRepository.deleteById(id);
+    }
 }
