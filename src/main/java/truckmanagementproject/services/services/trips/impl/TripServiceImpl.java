@@ -10,6 +10,7 @@ import truckmanagementproject.data.models.vehicles.Vehicle;
 import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.data.repositories.users.DriverRepository;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
+import truckmanagementproject.services.models.trips.FinishTripServiceModel;
 import truckmanagementproject.services.services.trips.TripService;
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
@@ -95,5 +96,15 @@ public class TripServiceImpl implements TripService {
         tripModel.setExpensesSum(expenses);
 
         return tripModel;
+    }
+
+    @Override
+    public void finishTrip(FinishTripServiceModel tripServiceModel, String reference) {
+        Trip trip = tripRepository.getByReference(reference);
+        trip.setEmptyKm(tripServiceModel.getEmptyKm());
+        trip.setTripKm(tripServiceModel.getTripKm());
+        trip.setEmptyPallets(tripServiceModel.getEmptyPallets());
+        trip.setIsFinished(true);
+        tripRepository.saveAndFlush(trip);
     }
 }

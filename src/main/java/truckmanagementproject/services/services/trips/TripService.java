@@ -1,6 +1,7 @@
 package truckmanagementproject.services.services.trips;
 
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
+import truckmanagementproject.services.models.trips.FinishTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface TripService {
     List<TripServiceModel> getAllCurrent();
 
     TripServiceModel getTripByReference(String reference);
+
+    void finishTrip(FinishTripServiceModel tripServiceModel, String reference);
+
 }

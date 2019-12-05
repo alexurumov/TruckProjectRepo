@@ -16,11 +16,6 @@
                 <div class="row align-items-center">
                     <div class="mx-auto col-md-8">
                         <div class="card card-body card-project mb-5">
-                            <!--TODO progress bar-->
-                            <!--                            <div class="progress" style="height: .5rem;">-->
-                            <!--                                <div class="progress-bar bg-warning" role="progressbar" style="width: 50%;"-->
-                            <!--                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>-->
-                            <!--                            </div>-->
                             <div class="mb-3 row" style="margin-bottom: 30px; margin-top: 20px;">
                                 <div class="text-center mx-auto col-9 card-body">
                                     <h2>[[${trip.vehicleRegNumber}]]</h2>
@@ -58,8 +53,10 @@
                                                 </th:block>
                                             </li>
                                         </th:block>
-                                        <a class="btn btn-block1 btn-sm btn-primary"
-                                           th:href="@{'/trips/add-collection/' + ${trip.reference}}">+ Collection</a>
+                                        <th:block th:if="${session.user.role != 'Driver'}">
+                                            <a class="btn btn-block1 btn-sm btn-primary"
+                                               th:href="@{'/trips/add-collection/' + ${trip.reference}}">+ Collection</a>
+                                        </th:block>
                                         <button type="button" class="btn btn-block1 btn-sm btn-primary"
                                                 data-toggle="modal"
                                                 data-target="#moreInfoCollectionsModal">
@@ -98,15 +95,22 @@
                                             <li>
                                                 <th:block th:if="${delivery.isFinished == true}">
                                                     <i class="mr-3 fill-success" data-eva="checkmark-outline"></i>
+                                                    [[${delivery.name}]]
                                                 </th:block>
                                                 <th:block th:unless="${delivery.isFinished == true}">
                                                     <i class="mr-3 fill-warning" data-eva="car-outline"></i>
+                                                    [[${delivery.name}]]
+                                                    <th:block th:if="${session.user.role == 'Driver'}">
+                                                        <a class="btn btn-success btn-sm float-sm-right"
+                                                           th:href="@{'/trips/finish-milestone/' + ${delivery.id}}"></a>
+                                                    </th:block>
                                                 </th:block>
-                                                [[${delivery.name}]]
                                             </li>
                                         </th:block>
-                                        <a class="btn btn-block1 btn-sm btn-primary"
-                                           th:href="@{'/trips/add-delivery/' + ${trip.reference}}">+ Delivery</a>
+                                        <th:block th:if="${session.user.role != 'Driver'}">
+                                            <a class="btn btn-block1 btn-sm btn-primary"
+                                               th:href="@{'/trips/add-delivery/' + ${trip.reference}}">+ Delivery</a>
+                                        </th:block>
                                         <button type="button" class="btn btn-block1 btn-sm btn-primary"
                                                 data-toggle="modal"
                                                 data-target="#moreInfoDeliveriesModal">
@@ -133,7 +137,6 @@
                                                     </th:block>
                                                     </tbody>
                                                 </table>
-
                                             </div>
                                         </div>
                                     </ul>
@@ -155,6 +158,10 @@
                                         no
                                     </th:block>
                                 </div>
+                                <th:block th:if="${session.user.role == 'Driver'}">
+                                    <a class="btn btn-block1 btn-sm btn-primary"
+                                       th:href="@{'/trips/finish-trip/' + ${trip.reference}}">Finish Trip</a>
+                                </th:block>
                             </div>
                         </div>
                     </div>
