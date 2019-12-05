@@ -2,6 +2,7 @@ package truckmanagementproject.services.services.documents;
 
 import truckmanagementproject.services.models.documents.*;
 
+import java.util.BitSet;
 import java.util.List;
 
 public interface DocumentService {
@@ -24,5 +25,9 @@ public interface DocumentService {
     List<VehicleDocumentServiceModel> getAllVehicleDocs();
 
     void removeVehicleDocument(String id);
+
+    List<DriverDocumentServiceModel> getAllDriverDocs();
+
+    void removeDriverDocument(String id);
 
 }

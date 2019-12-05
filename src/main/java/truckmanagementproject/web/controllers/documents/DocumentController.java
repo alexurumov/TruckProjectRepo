@@ -231,11 +231,29 @@ public class DocumentController {
 
             documentService.addDriverDocument(docServiceModel);
 
-            modelAndView.setViewName("documents/driver/all");
+            modelAndView.setViewName("redirect:/documents/driver/all");
             return modelAndView;
         } catch (IOException e) {
             return new ModelAndView("redirect:/documents/driver/add");
         }
+    }
+
+    @GetMapping("/driver/all")
+    public ModelAndView getAllDriverDocs(ModelAndView modelAndView, HttpSession session) {
+
+        List<DriverDocumentViewModel> documents = documentService.getAllDriverDocs()
+                .stream()
+                .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("documents", documents);
+        modelAndView.setViewName("documents/driver/all");
+        return modelAndView;
+    }
+
+    @GetMapping("/driver/remove/{id}")
+    public ModelAndView removeDriverDoc(@PathVariable String id) {
+        documentService.removeDriverDocument(id);
+        return new ModelAndView("redirect:/documents/driver/all");
     }
 
     @GetMapping("/company/add")
