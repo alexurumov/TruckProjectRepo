@@ -23,6 +23,7 @@ public class TripViewModel {
     private BigDecimal expensesSum;
     private Integer emptyPallets;
     private Boolean isFinished;
+    private BigDecimal price;
     private List<MilestoneViewModel> collections;
     private List<MilestoneViewModel> deliveries;
 }

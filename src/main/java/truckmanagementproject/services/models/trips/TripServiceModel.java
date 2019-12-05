@@ -23,5 +23,6 @@ public class TripServiceModel {
     private BigDecimal expensesSum;
     private Integer emptyPallets;
     private Boolean isFinished;
+    private BigDecimal price;
     private List<MilestoneServiceModel> milestones;
 }

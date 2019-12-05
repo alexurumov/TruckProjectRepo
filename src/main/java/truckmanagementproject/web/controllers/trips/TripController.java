@@ -1,5 +1,6 @@
 package truckmanagementproject.web.controllers.trips;
 
+import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -128,14 +129,31 @@ public class TripController {
         }
     }
 
-    //TODO
     @GetMapping("/finished")
-    public ModelAndView getAllFinishedTrips(ModelAndView modelAndView) {
-        modelAndView.setViewName("trips/all-finished");
-        return modelAndView;
+    public ModelAndView getAllFinishedTrips(ModelAndView modelAndView, HttpSession session) {
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+
+        if (user.getRole().equals("Driver")) {
+            String driverUsername = user.getUsername();
+            List<TripViewModel> trips = tripService.getAllTripsByDriver(driverUsername)
+                    .stream()
+                    .filter(TripServiceModel::getIsFinished)
+                    .map(trip -> mapper.map(trip, TripViewModel.class))
+                    .collect(Collectors.toList());
+            modelAndView.addObject("trips", trips);
+            modelAndView.setViewName("trips/all-finished");
+            return modelAndView;
+        } else {
+            List<TripViewModel> trips = tripService.getAllFinished()
+                    .stream()
+                    .map(trip -> mapper.map(trip, TripViewModel.class))
+                    .collect(Collectors.toList());
+            modelAndView.addObject("trips", trips);
+            modelAndView.setViewName("trips/all-finished");
+            return modelAndView;
+        }
     }
 
-    //TODO
     @GetMapping("/details/{reference}")
     public ModelAndView getTripDetails(@PathVariable String reference, ModelAndView modelAndView) {
 
@@ -271,6 +289,12 @@ public class TripController {
         milestoneService.updateMilestone(id);
         String reference = milestoneService.getById(id).getTripReference();
         return "redirect:/trips/details/" + reference;
+    }
+
+    @GetMapping("/remove/{reference}")
+    public ModelAndView removeTrip(@PathVariable String reference) {
+        this.tripService.remove(reference);
+        return new ModelAndView("redirect:/trips/finished");
     }
 
     private boolean isMilestoneValid(AddMilestoneModel addMilestoneModel) {

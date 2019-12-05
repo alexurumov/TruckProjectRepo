@@ -16,6 +16,7 @@ import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -106,5 +107,31 @@ public class TripServiceImpl implements TripService {
         trip.setEmptyPallets(tripServiceModel.getEmptyPallets());
         trip.setIsFinished(true);
         tripRepository.saveAndFlush(trip);
+    }
+
+    @Override
+    public List<TripServiceModel> getAllFinished() {
+        return tripRepository.findAll()
+                .stream()
+                .filter(Trip::getIsFinished)
+                .map(trip -> {
+                    TripServiceModel model = mapper.map(trip, TripServiceModel.class);
+                    List<MilestoneServiceModel> milestones = trip.getMilestones()
+                            .stream()
+                            .map(milestone -> mapper.map(milestone, MilestoneServiceModel.class))
+                            .collect(Collectors.toList());
+
+                    model.setMilestones(milestones);
+                    BigDecimal expenses = trip.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+                    model.setExpensesSum(expenses);
+                    return model;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void remove(String reference) {
+        tripRepository.deleteByReference(reference);
     }
 }

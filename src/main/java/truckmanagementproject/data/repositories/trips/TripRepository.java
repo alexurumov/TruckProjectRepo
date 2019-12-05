@@ -10,4 +10,6 @@ import java.util.List;
 public interface TripRepository extends JpaRepository<Trip, String> {
     Trip getByReference(String reference);
     List<Trip> getAllByDriverUsername(String driverUsername);
+
+    void deleteByReference(String reference);
 }

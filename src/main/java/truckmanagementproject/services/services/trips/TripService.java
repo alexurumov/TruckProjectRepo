@@ -18,4 +18,7 @@ public interface TripService {
 
     void finishTrip(FinishTripServiceModel tripServiceModel, String reference);
 
+    List<TripServiceModel> getAllFinished();
+
+    void remove(String reference);
 }
