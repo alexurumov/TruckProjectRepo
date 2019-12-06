@@ -262,6 +262,17 @@ public class DocumentController {
         return modelAndView;
     }
 
+    @GetMapping("/driver/{id}")
+    public ModelAndView getDriverDocumentsByDriver(@PathVariable String id, ModelAndView modelAndView) {
+        List<DriverDocumentViewModel> documents = documentService.getAllDriverDocsByDriver(id)
+                .stream()
+                .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("documents", documents);
+        modelAndView.setViewName("documents/vehicle/all");
+        return modelAndView;
+    }
+
     @GetMapping("/driver/remove/{id}")
     public ModelAndView removeDriverDoc(@PathVariable String id) {
         documentService.removeDriverDocument(id);

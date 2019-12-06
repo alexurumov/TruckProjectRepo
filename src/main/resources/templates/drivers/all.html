@@ -19,37 +19,30 @@
                             <table class="table table-striped table-sm">
                                 <thead>
                                 <tr>
-                                    <th>Reg Number</th>
+                                    <th>Name</th>
                                     <th>Documents</th>
                                     <th>Trips</th>
-                                    <th>Expenses</th>
                                     <th>Actons</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <th:block th:each="vehicle : ${vehicles}">
+                                <th:block th:each="driver : ${drivers}">
                                     <tr>
-                                        <td>[[${vehicle.regNumber}]]</td>
+                                        <td>[[${driver.name}]]</td>
                                         <td>
                                             <a class="btn btn-block1 btn-sm btn-primary"
-                                               th:href="@{'/documents/vehicle/' + ${vehicle.id}}">View
+                                               th:href="@{'/documents/driver/' + ${driver.id}}">View
                                                 Documents
                                             </a>
                                         </td>
                                         <td>
                                             <a class="btn btn-block1 btn-sm btn-primary"
-                                               th:href="@{'/trips/finished/by-vehicle/' + ${vehicle.id}}">View
+                                               th:href="@{'/trips/finished/by-driver/' + ${driver.id}}">View
                                                 Trips
                                             </a>
                                         </td>
                                         <td>
-                                            <a class="btn btn-block1 btn-sm btn-primary"
-                                               th:href="@{'/expenses/vehicle/' + ${vehicle.id}}">View
-                                                Expenses
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a th:href="'/vehicles/remove/' + ${vehicle.id}"
+                                            <a th:href="'/drivers/remove/' + ${driver.id}"
                                                class="btn btn-block1 btn-sm btn-danger">Remove
                                             </a>
                                         </td>
@@ -62,32 +55,25 @@
                             <table class="table table-striped table-sm">
                                 <thead>
                                 <tr>
-                                    <th>Reg Number</th>
+                                    <th>Name</th>
                                     <th>Documents</th>
                                     <th>Trips</th>
-                                    <th>Expenses</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <th:block th:each="vehicle : ${vehicles}">
+                                <th:block th:each="driver : ${drivers}">
                                     <tr>
-                                        <td>[[${vehicle.regNumber}]]</td>
+                                        <td>[[${driver.name}]]</td>
                                         <td>
                                             <a class="btn btn-block1 btn-sm btn-primary"
-                                               th:href="@{'/documents/vehicle/' + ${vehicle.id}}">View
+                                               th:href="@{'/documents/driver/' + ${driver.id}}">View
                                                 Documents
                                             </a>
                                         </td>
                                         <td>
                                             <a class="btn btn-block1 btn-sm btn-primary"
-                                               th:href="@{'/trips/finished/' + ${vehicle.id}}">View
+                                               th:href="@{'/trips/finished/by-driver/' + ${driver.id}}">View
                                                 Trips
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-block1 btn-sm btn-primary"
-                                               th:href="@{'/expenses/vehicle/' + ${vehicle.id}}">View
-                                                Expenses
                                             </a>
                                         </td>
                                     </tr>

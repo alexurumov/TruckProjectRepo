@@ -35,4 +35,6 @@ public interface DocumentService {
     List<CompanyDocumentServiceModel> getAllCompanyDocs();
 
     void removeCompanyDocument(String id);
+
+    List<DriverDocumentServiceModel> getAllDriverDocsByDriver(String id);
 }

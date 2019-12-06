@@ -142,4 +142,12 @@ public class TripServiceImpl implements TripService {
                 .map(trip -> mapper.map(trip, TripServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TripServiceModel> getAllTripsByDriverId(String id) {
+        return tripRepository.getAllByDriverId(id)
+                .stream()
+                .map(trip -> mapper.map(trip, TripServiceModel.class))
+                .collect(Collectors.toList());
+    }
 }

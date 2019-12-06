@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class DriverServiceModel {
+    private String id;
     private String name;
 }

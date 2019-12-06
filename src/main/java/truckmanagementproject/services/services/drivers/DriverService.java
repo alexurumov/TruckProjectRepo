@@ -8,4 +8,7 @@ import java.util.List;
 public interface DriverService {
     void registerDriver (AddDriverServiceModel model) throws Exception;
     List<DriverServiceModel> getAllDrivers();
+
+    void removeDriver(String id);
+
 }

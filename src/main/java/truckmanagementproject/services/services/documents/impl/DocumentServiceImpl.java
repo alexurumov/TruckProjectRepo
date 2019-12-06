@@ -157,4 +157,12 @@ public class DocumentServiceImpl implements DocumentService {
                 .map(doc -> mapper.map(doc, VehicleDocumentServiceModel.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<DriverDocumentServiceModel> getAllDriverDocsByDriver(String id) {
+        return driverDocumentRepository.getAllByDriverId(id)
+                .stream()
+                .map(doc -> mapper.map(doc, DriverDocumentServiceModel.class))
+                .collect(Collectors.toList());
+    }
 }

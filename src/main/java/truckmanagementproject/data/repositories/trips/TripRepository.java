@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import truckmanagementproject.data.models.trips.Trip;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface TripRepository extends JpaRepository<Trip, String> {
     void deleteByReference(String reference);
 
     List<Trip> getAllByVehicleId(String id);
+
+    List<Trip> getAllByDriverId(String id);
 }

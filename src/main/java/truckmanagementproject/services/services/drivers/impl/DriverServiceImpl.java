@@ -11,6 +11,7 @@ import truckmanagementproject.services.services.hashing.HashingService;
 import truckmanagementproject.services.models.drivers.AddDriverServiceModel;
 import truckmanagementproject.services.models.drivers.DriverServiceModel;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,5 +51,11 @@ public class DriverServiceImpl implements DriverService {
                 .stream()
                 .map(driver -> mapper.map(driver, DriverServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeDriver(String id) {
+        driverRepository.deleteById(id);
     }
 }

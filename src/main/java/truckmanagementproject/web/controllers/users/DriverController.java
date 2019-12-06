@@ -4,16 +4,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.drivers.DriverService;
 import truckmanagementproject.services.models.drivers.AddDriverServiceModel;
 import truckmanagementproject.web.models.drivers.AddDriverModel;
+import truckmanagementproject.web.models.drivers.DriverViewModel;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/drivers")
 public class DriverController {
 
     @ModelAttribute
@@ -30,12 +33,12 @@ public class DriverController {
         this.driverService = driverService;
     }
 
-    @GetMapping("/drivers/add")
+    @GetMapping("/add")
     public String getAddDriverForm(@ModelAttribute("model") AddDriverModel model) {
         return "drivers/add-driver";
     }
 
-    @PostMapping("/drivers/add")
+    @PostMapping("/add")
     public String addDriver(@Valid @ModelAttribute("model") AddDriverModel model, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -51,8 +54,23 @@ public class DriverController {
         }
     }
 
-    @GetMapping("/drivers/all")
-    public String getAllDrivers() {
-        return "drivers/all-drivers";
+    @GetMapping("/all")
+    public ModelAndView getAllDrivers(ModelAndView modelAndView) {
+        List<DriverViewModel> drivers = driverService.getAllDrivers()
+                .stream()
+                .map(driver -> mapper.map(driver, DriverViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("drivers", drivers);
+        modelAndView.setViewName("/drivers/all");
+        return modelAndView;
     }
+
+    @GetMapping("/remove/{id}")
+    public ModelAndView removeDriver(@PathVariable String id) {
+        driverService.removeDriver(id);
+        return new ModelAndView("redirect:/drivers/all");
+    }
+
+
 }
