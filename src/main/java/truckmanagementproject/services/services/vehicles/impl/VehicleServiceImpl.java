@@ -9,6 +9,7 @@ import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.services.models.vehicles.AddVehicleServiceModel;
 import truckmanagementproject.services.models.vehicles.VehicleServiceModel;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,5 +45,11 @@ public class VehicleServiceImpl implements VehicleService {
                 .stream()
                 .map(vehicle -> mapper.map(vehicle, VehicleServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeVehicle(String id) {
+        vehicleRepository.deleteById(id);
     }
 }

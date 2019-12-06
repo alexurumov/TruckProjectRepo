@@ -2,6 +2,7 @@ package truckmanagementproject.services.services.documents;
 
 import truckmanagementproject.services.models.documents.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface DocumentService {
@@ -23,6 +24,8 @@ public interface DocumentService {
 
     List<VehicleDocumentServiceModel> getAllVehicleDocs();
 
+    List<VehicleDocumentServiceModel> getAllVehicleDocumentsByVehicle(String id);
+
     void removeVehicleDocument(String id);
 
     List<DriverDocumentServiceModel> getAllDriverDocs();
@@ -32,5 +35,4 @@ public interface DocumentService {
     List<CompanyDocumentServiceModel> getAllCompanyDocs();
 
     void removeCompanyDocument(String id);
-
 }

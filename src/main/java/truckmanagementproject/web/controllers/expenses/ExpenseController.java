@@ -155,9 +155,9 @@ public class ExpenseController {
         return new ModelAndView("redirect:/expenses/vehicle/all");
     }
 
-    @GetMapping("/vehicle/{regNumber}")
-    public ModelAndView getVehicleExpensesByTrip(@PathVariable String regNumber, ModelAndView modelAndView) {
-        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpensesByVehicle(regNumber)
+    @GetMapping("/vehicle/{id}")
+    public ModelAndView getVehicleExpensesByTrip(@PathVariable String id, ModelAndView modelAndView) {
+        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpensesByVehicle(id)
                 .stream()
                 .map(exp -> mapper.map(exp, VehicleExpenseViewModel.class))
                 .collect(Collectors.toList());

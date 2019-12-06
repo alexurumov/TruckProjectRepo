@@ -134,4 +134,12 @@ public class TripServiceImpl implements TripService {
     public void remove(String reference) {
         tripRepository.deleteByReference(reference);
     }
+
+    @Override
+    public List<TripServiceModel> getAllTripsByVehicle(String id) {
+        return tripRepository.getAllByVehicleId(id)
+                .stream()
+                .map(trip -> mapper.map(trip, TripServiceModel.class))
+                .collect(Collectors.toList());
+    }
 }

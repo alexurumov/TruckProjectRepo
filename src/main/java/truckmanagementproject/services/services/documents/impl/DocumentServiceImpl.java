@@ -149,4 +149,12 @@ public class DocumentServiceImpl implements DocumentService {
     public void removeCompanyDocument(String id) {
         companyDocumentRepository.deleteById(id);
     }
+
+    @Override
+    public List<VehicleDocumentServiceModel> getAllVehicleDocumentsByVehicle(String id) {
+        return vehicleDocumentRepository.getAllByVehicleId(id)
+                .stream()
+                .map(doc -> mapper.map(doc, VehicleDocumentServiceModel.class))
+                .collect(Collectors.toList());
+    }
 }

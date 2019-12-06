@@ -25,5 +25,5 @@ public interface ExpenseService {
 
     void removeVehicleExpense(String id);
 
-    List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String regNumber);
+    List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String id);
 }

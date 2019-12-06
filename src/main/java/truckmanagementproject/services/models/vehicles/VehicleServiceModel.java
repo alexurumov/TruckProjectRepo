@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class VehicleServiceModel {
+    private String id;
     private String regNumber;
 }

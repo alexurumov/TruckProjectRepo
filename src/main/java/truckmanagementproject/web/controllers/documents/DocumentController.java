@@ -17,6 +17,7 @@ import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.documents.*;
 import truckmanagementproject.web.models.drivers.DriverViewModel;
+import truckmanagementproject.web.models.expenses.VehicleExpenseViewModel;
 import truckmanagementproject.web.models.trips.TripViewModel;
 import truckmanagementproject.web.models.vehicles.VehicleViewModel;
 
@@ -180,6 +181,17 @@ public class DocumentController {
     public ModelAndView getAllVehicleDocs(ModelAndView modelAndView, HttpSession session) {
 
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocs()
+                .stream()
+                .map(doc -> mapper.map(doc, VehicleDocumentViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("documents", documents);
+        modelAndView.setViewName("documents/vehicle/all");
+        return modelAndView;
+    }
+
+    @GetMapping("/vehicle/{id}")
+    public ModelAndView getVehicleDocumentsByTrip(@PathVariable String id, ModelAndView modelAndView) {
+        List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocumentsByVehicle(id)
                 .stream()
                 .map(doc -> mapper.map(doc, VehicleDocumentViewModel.class))
                 .collect(Collectors.toList());

@@ -9,4 +9,6 @@ public interface VehicleService {
     void registerVehicle (AddVehicleServiceModel model) throws Exception;
 
     List<VehicleServiceModel> getAllVehicles();
+
+    void removeVehicle(String id);
 }

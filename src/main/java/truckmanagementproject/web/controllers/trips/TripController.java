@@ -154,6 +154,18 @@ public class TripController {
         }
     }
 
+    @GetMapping("/finished/{id}")
+    public ModelAndView getAllFinishedTripsByVehicle(@PathVariable String id, ModelAndView modelAndView) {
+        List<TripViewModel> trips = tripService.getAllTripsByVehicle(id)
+                .stream()
+                .filter(TripServiceModel::getIsFinished)
+                .map(trip -> mapper.map(trip, TripViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("trips", trips);
+        modelAndView.setViewName("trips/all-finished");
+        return modelAndView;
+    }
+
     @GetMapping("/details/{reference}")
     public ModelAndView getTripDetails(@PathVariable String reference, ModelAndView modelAndView) {
 

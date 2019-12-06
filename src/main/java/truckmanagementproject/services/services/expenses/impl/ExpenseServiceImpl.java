@@ -104,8 +104,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String regNumber) {
-        return vehicleExpenseRepository.getAllByVehicleRegNumber(regNumber)
+    public List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String id) {
+        return vehicleExpenseRepository.getAllByVehicleId(id)
                 .stream()
                 .map(exp -> mapper.map(exp, VehicleExpenseServiceModel.class))
                 .collect(Collectors.toList());

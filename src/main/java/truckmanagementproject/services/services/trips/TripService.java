@@ -4,6 +4,7 @@ import truckmanagementproject.services.models.trips.AddTripServiceModel;
 import truckmanagementproject.services.models.trips.FinishTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
 
+import java.util.BitSet;
 import java.util.List;
 
 public interface TripService {
@@ -21,4 +22,6 @@ public interface TripService {
     List<TripServiceModel> getAllFinished();
 
     void remove(String reference);
+
+    List<TripServiceModel> getAllTripsByVehicle(String id);
 }
