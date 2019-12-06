@@ -20,12 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Driver extends User {
 
-    @Column(name = "driving_hours")
-    private LocalTime drivingHours;
-
-    @Column(name = "working_hours")
-    private LocalTime workingHours;
-
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
     private List<DriverDocument> driverDocuments = new ArrayList<>();
 
