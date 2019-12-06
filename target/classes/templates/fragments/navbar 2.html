@@ -1,0 +1,108 @@
+<th:block th:fragment>
+    <nav class="navbar navbar-expand-xl sticky-top">
+        <div class="container">
+            <a rel="home" href="/home">
+                <i class="eva-xl" data-eva="github" data-eva-animation="pulse"></i>
+            </a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" type="button"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle Navigation">
+                <i class="eva-md" data-eva="menu"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownManagers" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Trips
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                            <a class="dropdown-item" href="/trips/add">Add Trip</a>
+                            <a class="dropdown-item" href="/trips/current">Current Trips</a>
+                            <a class="dropdown-item" href="/trips/finished">Finished Trips</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownTrips" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Managers
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                            <a class="dropdown-item" href="/managers/add">Add Manager</a>
+                            <a class="dropdown-item" href="/managers/all">All Managers</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownDrivers" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Drivers
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownDrivers">
+                            <a class="dropdown-item" href="/drivers/add">Add Driver</a>
+                            <a class="dropdown-item" href="/drivers/all">All Drivers</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownVehicles" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Vehicles
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownVehicles">
+                            <a class="dropdown-item" href="/vehicles/add">Add Vehicle</a>
+                            <a class="dropdown-item" href="/vehicles/all">All Vehicles</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownDocuments" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Documents
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownDocuments">
+                            <a class="dropdown-item" href="/documents/add">Add New Document</a>
+                            <a class="dropdown-item" href="/documents/expiring">Expiring Documents</a>
+                            <a class="dropdown-item" href="/documents/all">All Documents</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownExpenses" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Expenses
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                            <a class="dropdown-item" href="/expenses/add">Add Expense</a>
+                            <a class="dropdown-item" href="/expenses/all">All Expenses</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" id="navbarDropdownSummary" data-toggle="dropdown" href="#" role="button"
+                           aria-haspopup="true" aria-expanded="false">
+                            Summary
+                            <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs" data-eva="arrow-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                            <a class="dropdown-item" href="/summary/overall">Overall</a>
+                            <a class="dropdown-item" href="/summary/by-truck">By truck</a>
+                            <a class="dropdown-item" href="/summary/by-driver">By driver</a>
+                        </div>
+                    </li>
+                </ul>
+                <hr class="w-100">
+                <div>
+                    <span class="avatar avatar-md h5 bg-primary rounded-circle">ik</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</th:block>
