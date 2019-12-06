@@ -3,10 +3,7 @@ package truckmanagementproject.web.controllers.expenses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.cloudinary.CloudinaryService;
 import truckmanagementproject.services.services.expenses.ExpenseService;
@@ -15,8 +12,11 @@ import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.services.models.expenses.AddTripExpenseServiceModel;
 import truckmanagementproject.services.models.expenses.AddVehicleExpenseServiceModel;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
+import truckmanagementproject.web.models.documents.TripDocumentViewModel;
 import truckmanagementproject.web.models.expenses.AddTripExpenseModel;
 import truckmanagementproject.web.models.expenses.AddVehicleExpenseModel;
+import truckmanagementproject.web.models.expenses.TripExpenseViewModel;
+import truckmanagementproject.web.models.expenses.VehicleExpenseViewModel;
 import truckmanagementproject.web.models.trips.TripViewModel;
 import truckmanagementproject.web.models.vehicles.VehicleViewModel;
 
@@ -74,8 +74,8 @@ public class ExpenseController {
                     .map(tr -> mapper.map(tr, TripViewModel.class))
                     .collect(Collectors.toList());
             modelAndView.addObject("trips", trips);
-            modelAndView.setViewName("/expenses/trip/add");
             modelAndView.addObject("isValid", false);
+            modelAndView.setViewName("/expenses/trip/add");
             return modelAndView;
         }
 
@@ -89,12 +89,81 @@ public class ExpenseController {
             tripExpense.setDate(date);
             expenseService.addTripExpense(tripExpense);
 
-            modelAndView.setViewName("expenses/trip/all");
+            modelAndView.setViewName("redirect:/expenses/trip/all");
             return modelAndView;
 
         } catch (Exception e) {
             return new ModelAndView("redirect:/expenses/trip/add");
         }
+    }
+
+    @GetMapping("/trip/all")
+    public ModelAndView getAllTripExpenses(ModelAndView modelAndView, HttpSession session) {
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+
+        if (user.getRole().equals("Driver")) {
+            List<TripExpenseViewModel> expenses = expenseService.getAllTripExpensesByDriver(user.getUsername())
+                    .stream()
+                    .map(expense -> mapper.map(expense, TripExpenseViewModel.class))
+                    .collect(Collectors.toList());
+            modelAndView.addObject("expenses", expenses);
+            modelAndView.setViewName("expenses/trip/all");
+        } else {
+            List<TripExpenseViewModel> expenses = expenseService.getAllTripExpenses()
+                    .stream()
+                    .map(expense -> mapper.map(expense, TripExpenseViewModel.class))
+                    .collect(Collectors.toList());
+            modelAndView.addObject("expenses", expenses);
+            modelAndView.setViewName("expenses/trip/all");
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/trip/remove/{id}")
+    public ModelAndView removeTripExpense(@PathVariable String id) {
+        expenseService.removeTripExpense(id);
+        return new ModelAndView("redirect:/expenses/trip/all");
+    }
+
+    @GetMapping("/trip/{reference}")
+    public ModelAndView getTripExpensesByTrip(@PathVariable String reference, ModelAndView modelAndView) {
+        List<TripExpenseViewModel> expenses = expenseService.getAllTripExpensesByTrip(reference)
+                .stream()
+                .map(exp -> mapper.map(exp, TripExpenseViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("expenses", expenses);
+        modelAndView.setViewName("expenses/trip/all");
+        return modelAndView;
+    }
+
+    @GetMapping("/vehicle/all")
+    public ModelAndView getAllVehicleExpenses(ModelAndView modelAndView, HttpSession session) {
+
+        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpenses()
+                .stream()
+                .map(expense -> mapper.map(expense, VehicleExpenseViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("expenses", expenses);
+        modelAndView.setViewName("expenses/vehicle/all");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/vehicle/remove/{id}")
+    public ModelAndView removeVehicleExpense(@PathVariable String id) {
+        expenseService.removeVehicleExpense(id);
+        return new ModelAndView("redirect:/expenses/vehicle/all");
+    }
+
+    @GetMapping("/vehicle/{regNumber}")
+    public ModelAndView getVehicleExpensesByTrip(@PathVariable String regNumber, ModelAndView modelAndView) {
+        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpensesByVehicle(regNumber)
+                .stream()
+                .map(exp -> mapper.map(exp, VehicleExpenseViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("expenses", expenses);
+        modelAndView.setViewName("expenses/vehicle/all");
+        return modelAndView;
     }
 
     @GetMapping("/vehicle/add")
@@ -111,7 +180,7 @@ public class ExpenseController {
 
     @PostMapping("/vehicle/add")
     public ModelAndView addVehicleExpense(@ModelAttribute AddVehicleExpenseModel addVehicleExpenseModel,
-                                       ModelAndView modelAndView) {
+                                          ModelAndView modelAndView) {
 
         if (!isVehicleExpenseValid(addVehicleExpenseModel)) {
 
@@ -120,8 +189,8 @@ public class ExpenseController {
                     .map(vehicle -> mapper.map(vehicle, VehicleViewModel.class))
                     .collect(Collectors.toList());
             modelAndView.addObject("vehicles", vehicles);
-            modelAndView.setViewName("/expenses/vehicle/add");
             modelAndView.addObject("isValid", false);
+            modelAndView.setViewName("/expenses/vehicle/add");
             return modelAndView;
         }
 
@@ -135,7 +204,7 @@ public class ExpenseController {
             vehicleExpense.setPicture(picture);
             expenseService.addVehicleExpense(vehicleExpense);
 
-            modelAndView.setViewName("expenses/vehicle/all");
+            modelAndView.setViewName("redirect:/expenses/vehicle/all");
             return modelAndView;
 
         } catch (Exception e) {

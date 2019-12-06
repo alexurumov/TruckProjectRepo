@@ -3,7 +3,6 @@ package truckmanagementproject.data.repositories.documents;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import truckmanagementproject.data.models.documents.TripDocument;
-import truckmanagementproject.services.models.documents.TripDocumentServiceModel;
 
 import java.util.List;
 

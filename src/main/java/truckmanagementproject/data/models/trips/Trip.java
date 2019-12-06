@@ -12,6 +12,7 @@ import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;

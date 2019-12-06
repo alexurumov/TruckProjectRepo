@@ -11,9 +11,16 @@ import truckmanagementproject.data.repositories.expenses.TripExpenseRepository;
 import truckmanagementproject.data.repositories.expenses.VehicleExpenseRepository;
 import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
+import truckmanagementproject.services.models.documents.TripDocumentServiceModel;
+import truckmanagementproject.services.models.expenses.TripExpenseServiceModel;
+import truckmanagementproject.services.models.expenses.VehicleExpenseServiceModel;
 import truckmanagementproject.services.services.expenses.ExpenseService;
 import truckmanagementproject.services.models.expenses.AddTripExpenseServiceModel;
 import truckmanagementproject.services.models.expenses.AddVehicleExpenseServiceModel;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -47,5 +54,60 @@ public class ExpenseServiceImpl implements ExpenseService {
         Vehicle vehicle = vehicleRepository.getByRegNumber(vehicleExpense.getVehicleRegNumber());
         expense.setVehicle(vehicle);
         vehicleExpenseRepository.saveAndFlush(expense);
+    }
+
+    @Override
+    @Transactional
+    public List<TripExpenseServiceModel> getAllTripExpensesByDriver(String username) {
+        return tripExpenseRepository.getAllByTripDriverUsername(username)
+                .stream()
+                .map(exp -> mapper.map(exp, TripExpenseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<TripExpenseServiceModel> getAllTripExpenses() {
+        return tripExpenseRepository.findAll()
+                .stream()
+                .map(exp -> mapper.map(exp, TripExpenseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeTripExpense(String id) {
+        tripExpenseRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public List<TripExpenseServiceModel> getAllTripExpensesByTrip(String reference) {
+        return tripExpenseRepository.getAllByTripReference(reference)
+                .stream()
+                .map(exp -> mapper.map(exp, TripExpenseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VehicleExpenseServiceModel> getAllVehicleExpenses() {
+        return vehicleExpenseRepository.findAll()
+                .stream()
+                .map(exp -> mapper.map(exp, VehicleExpenseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void removeVehicleExpense(String id) {
+        vehicleExpenseRepository.deleteById(id);
+    }
+
+    @Override
+    public List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String regNumber) {
+        return vehicleExpenseRepository.getAllByVehicleRegNumber(regNumber)
+                .stream()
+                .map(exp -> mapper.map(exp, VehicleExpenseServiceModel.class))
+                .collect(Collectors.toList());
     }
 }
