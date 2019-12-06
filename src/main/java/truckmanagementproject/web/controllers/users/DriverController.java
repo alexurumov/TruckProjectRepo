@@ -35,14 +35,14 @@ public class DriverController {
 
     @GetMapping("/add")
     public String getAddDriverForm(@ModelAttribute("model") AddDriverModel model) {
-        return "drivers/add-driver";
+        return "add";
     }
 
     @PostMapping("/add")
     public String addDriver(@Valid @ModelAttribute("model") AddDriverModel model, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "drivers/add-driver";
+            return "add";
         }
 
         AddDriverServiceModel serviceModel = mapper.map(model, AddDriverServiceModel.class);

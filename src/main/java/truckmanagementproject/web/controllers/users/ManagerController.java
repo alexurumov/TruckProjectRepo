@@ -4,16 +4,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.managers.ManagerService;
 import truckmanagementproject.services.models.managers.AddManagerServiceModel;
+import truckmanagementproject.web.models.drivers.DriverViewModel;
 import truckmanagementproject.web.models.managers.AddManagerModel;
+import truckmanagementproject.web.models.managers.ManagerViewModel;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/managers")
 public class ManagerController {
 
     @ModelAttribute
@@ -30,16 +34,16 @@ public class ManagerController {
         this.managerService = managerService;
     }
 
-    @GetMapping("/managers/add")
+    @GetMapping("/add")
     public String getAddManagerForm(@ModelAttribute("model") AddManagerModel model) {
-        return "managers/add-manager";
+        return "managers/add";
     }
 
-    @PostMapping("/managers/add")
+    @PostMapping("/add")
     public String addManager(@Valid @ModelAttribute("model") AddManagerModel model, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "managers/add-manager";
+            return "add";
         }
 
         AddManagerServiceModel serviceModel = mapper.map(model, AddManagerServiceModel.class);
@@ -47,13 +51,25 @@ public class ManagerController {
             managerService.registerManager(serviceModel);
             return "redirect:/managers/all";
         } catch (Exception e) {
-            //DO Something
             return "redirect:/managers/add";
         }
     }
 
-    @GetMapping("/managers/all")
-    public String getAllDrivers() {
-        return "managers/all-managers";
+    @GetMapping("/all")
+    public ModelAndView getAllManagers(ModelAndView modelAndView) {
+        List<ManagerViewModel> managers = managerService.getAllManagers()
+                .stream()
+                .map(manager -> mapper.map(manager, ManagerViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("managers", managers);
+        modelAndView.setViewName("/managers/all");
+        return modelAndView;
+    }
+
+    @GetMapping("/remove/{id}")
+    public ModelAndView removeManager(@PathVariable String id) {
+        managerService.removeManager(id);
+        return new ModelAndView("redirect:/managers/all");
     }
 }
