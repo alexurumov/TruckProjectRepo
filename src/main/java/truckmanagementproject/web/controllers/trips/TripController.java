@@ -1,6 +1,5 @@
 package truckmanagementproject.web.controllers.trips;
 
-import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,14 +92,18 @@ public class TripController {
             return modelAndView;
         }
 
-        AddTripServiceModel tripServiceModel = mapper.map(addTripModel, AddTripServiceModel.class);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = LocalDate.parse(addTripModel.getDate(), formatter);
-        tripServiceModel.setDate(date);
 
-        tripService.addTrip(tripServiceModel);
+        try {
+            AddTripServiceModel tripServiceModel = mapper.map(addTripModel, AddTripServiceModel.class);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate date = LocalDate.parse(addTripModel.getDate(), formatter);
+            tripServiceModel.setDate(date);
+            tripService.addTrip(tripServiceModel);
+            return new ModelAndView("redirect:/trips/current");
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/trips/add");
+        }
 
-        return new ModelAndView("redirect:/trips/current");
     }
 
     @GetMapping("/current")
@@ -226,7 +229,7 @@ public class TripController {
             AddMilestoneServiceModel collection = mapper.map(addMilestoneModel, AddMilestoneServiceModel.class);
             collection.setMilestoneType("Collection");
             collection.setTripReference(reference);
-            milestoneService.addCollection(collection);
+            milestoneService.addMilestone(collection);
             modelAndView.setViewName("redirect:/trips/details/" + reference);
             return modelAndView;
         } catch (Exception e) {
@@ -258,7 +261,7 @@ public class TripController {
             AddMilestoneServiceModel delivery = mapper.map(addMilestoneModel, AddMilestoneServiceModel.class);
             delivery.setMilestoneType("Delivery");
             delivery.setTripReference(reference);
-            milestoneService.addCollection(delivery);
+            milestoneService.addMilestone(delivery);
             modelAndView.setViewName("redirect:/trips/details/" + reference);
             return modelAndView;
         } catch (Exception e) {

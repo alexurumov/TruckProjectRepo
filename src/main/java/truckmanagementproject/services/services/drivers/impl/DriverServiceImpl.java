@@ -10,6 +10,7 @@ import truckmanagementproject.services.services.drivers.DriverService;
 import truckmanagementproject.services.services.hashing.HashingService;
 import truckmanagementproject.services.models.drivers.AddDriverServiceModel;
 import truckmanagementproject.services.models.drivers.DriverServiceModel;
+import truckmanagementproject.util.ValidationUtil;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,13 +23,15 @@ public class DriverServiceImpl implements DriverService {
     private final ModelMapper mapper;
     private final AddDriverValidationService addValidationService;
     private final HashingService hashingService;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public DriverServiceImpl(DriverRepository driverRepository, ModelMapper mapper, AddDriverValidationService addValidationService, HashingService hashingService) {
+    public DriverServiceImpl(DriverRepository driverRepository, ModelMapper mapper, AddDriverValidationService addValidationService, HashingService hashingService, ValidationUtil validationUtil) {
         this.driverRepository = driverRepository;
         this.mapper = mapper;
         this.addValidationService = addValidationService;
         this.hashingService = hashingService;
+        this.validationUtil = validationUtil;
     }
 
     @Override
@@ -40,9 +43,11 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = mapper.map(model, Driver.class);
         driver.setPassword(hashingService.hash(model.getPassword()));
 
-        //TODO implement Validator utils and VALIDATE Manager fields before adding to DB
-
-        driverRepository.saveAndFlush(driver);
+        if (validationUtil.isValid(driver)) {
+            driverRepository.saveAndFlush(driver);
+        } else {
+            throw new Exception("Invalid Driver");
+        }
     }
 
     @Override

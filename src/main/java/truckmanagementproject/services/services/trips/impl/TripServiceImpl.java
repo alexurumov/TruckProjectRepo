@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import truckmanagementproject.data.models.expenses.Expense;
-import truckmanagementproject.data.models.expenses.TripExpense;
 import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
@@ -16,6 +15,7 @@ import truckmanagementproject.services.services.trips.TripService;
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
+import truckmanagementproject.util.ValidationUtil;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -29,13 +29,15 @@ public class TripServiceImpl implements TripService {
     private final DriverRepository driverRepository;
     private final VehicleRepository vehicleRepository;
     private final ModelMapper mapper;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public TripServiceImpl(TripRepository tripRepository, DriverRepository driverRepository, VehicleRepository vehicleRepository, ModelMapper mapper) {
+    public TripServiceImpl(TripRepository tripRepository, DriverRepository driverRepository, VehicleRepository vehicleRepository, ModelMapper mapper, ValidationUtil validationUtil) {
         this.tripRepository = tripRepository;
         this.driverRepository = driverRepository;
         this.vehicleRepository = vehicleRepository;
         this.mapper = mapper;
+        this.validationUtil = validationUtil;
     }
 
     @Override
@@ -53,13 +55,15 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void addTrip(AddTripServiceModel tripServiceModel) {
+    public void addTrip(AddTripServiceModel tripServiceModel) throws Exception {
         Trip trip = mapper.map(tripServiceModel, Trip.class);
         Driver driver = driverRepository.getByName(tripServiceModel.getDriverName());
         trip.setDriver(driver);
         Vehicle vehicle = vehicleRepository.getByRegNumber(tripServiceModel.getVehicleRegNumber());
         trip.setVehicle(vehicle);
-        tripRepository.saveAndFlush(trip);
+        if (validationUtil.isValid(trip)) {
+            tripRepository.saveAndFlush(trip);
+        } else throw new Exception("Invalid Trip!");
     }
 
     @Override
@@ -101,13 +105,15 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public void finishTrip(FinishTripServiceModel tripServiceModel, String reference) {
+    public void finishTrip(FinishTripServiceModel tripServiceModel, String reference) throws Exception {
         Trip trip = tripRepository.getByReference(reference);
         trip.setEmptyKm(tripServiceModel.getEmptyKm());
         trip.setTripKm(tripServiceModel.getTripKm());
         trip.setEmptyPallets(tripServiceModel.getEmptyPallets());
         trip.setIsFinished(true);
-        tripRepository.saveAndFlush(trip);
+        if (validationUtil.isValid(trip)) {
+            tripRepository.saveAndFlush(trip);
+        } else throw new Exception("Invalid Trip!");
     }
 
     @Override

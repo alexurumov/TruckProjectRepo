@@ -19,6 +19,7 @@ import truckmanagementproject.data.repositories.users.DriverRepository;
 import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
 import truckmanagementproject.services.models.documents.*;
 import truckmanagementproject.services.services.documents.DocumentService;
+import truckmanagementproject.util.ValidationUtil;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -35,9 +36,10 @@ public class DocumentServiceImpl implements DocumentService {
     private final TripRepository tripRepository;
     private final VehicleRepository vehicleRepository;
     private final ModelMapper mapper;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public DocumentServiceImpl(TripDocumentRepository tripDocumentRepository, DriverDocumentRepository driverDocumentRepository, VehicleDocumentRepository vehicleDocumentRepository, CompanyDocumentRepository companyDocumentRepository, DriverRepository driverRepository, TripRepository tripRepository, VehicleRepository vehicleRepository, ModelMapper mapper) {
+    public DocumentServiceImpl(TripDocumentRepository tripDocumentRepository, DriverDocumentRepository driverDocumentRepository, VehicleDocumentRepository vehicleDocumentRepository, CompanyDocumentRepository companyDocumentRepository, DriverRepository driverRepository, TripRepository tripRepository, VehicleRepository vehicleRepository, ModelMapper mapper, ValidationUtil validationUtil) {
         this.tripDocumentRepository = tripDocumentRepository;
         this.driverDocumentRepository = driverDocumentRepository;
         this.vehicleDocumentRepository = vehicleDocumentRepository;
@@ -46,36 +48,56 @@ public class DocumentServiceImpl implements DocumentService {
         this.tripRepository = tripRepository;
         this.vehicleRepository = vehicleRepository;
         this.mapper = mapper;
+        this.validationUtil = validationUtil;
     }
 
     @Override
-    public void addTripDocument(AddTripDocServiceModel model) {
+    public void addTripDocument(AddTripDocServiceModel model) throws Exception {
         TripDocument tripDocument = mapper.map(model, TripDocument.class);
         Trip trip = tripRepository.getByReference(model.getTripRef());
         tripDocument.setTrip(trip);
-        tripDocumentRepository.saveAndFlush(tripDocument);
+        if (validationUtil.isValid(tripDocument)) {
+            tripDocumentRepository.saveAndFlush(tripDocument);
+        } else  {
+            throw new Exception("Invalid Trip Document");
+        }
     }
 
     @Override
-    public void addDriverDocument(AddDriverDocServiceModel docServiceModel) {
+    public void addDriverDocument(AddDriverDocServiceModel docServiceModel) throws Exception {
         DriverDocument document = mapper.map(docServiceModel, DriverDocument.class);
         Driver driver = driverRepository.getByName(docServiceModel.getDriverName());
         document.setDriver(driver);
-        driverDocumentRepository.saveAndFlush(document);
+
+        if (validationUtil.isValid(document)) {
+            driverDocumentRepository.saveAndFlush(document);
+        } else {
+            throw new Exception("Invalid Driver Document");
+        }
     }
 
     @Override
-    public void addVehicleDocument(AddVehicleDocServiceModel docServiceModel) {
+    public void addVehicleDocument(AddVehicleDocServiceModel docServiceModel) throws Exception {
         VehicleDocument document = mapper.map(docServiceModel, VehicleDocument.class);
         Vehicle vehicle = vehicleRepository.getByRegNumber(docServiceModel.getRegNumber());
         document.setVehicle(vehicle);
-        vehicleDocumentRepository.saveAndFlush(document);
+
+        if (validationUtil.isValid(document)) {
+            vehicleDocumentRepository.saveAndFlush(document);
+        } else {
+            throw new Exception("Invalid Vehicle Document");
+        }
     }
 
     @Override
-    public void addCompanyDocument(AddCompanyDocServiceModel docServiceModel) {
+    public void addCompanyDocument(AddCompanyDocServiceModel docServiceModel) throws Exception {
         CompanyDocument document = mapper.map(docServiceModel, CompanyDocument.class);
-        companyDocumentRepository.saveAndFlush(document);
+
+        if (validationUtil.isValid(document)) {
+            companyDocumentRepository.saveAndFlush(document);
+        } else {
+            throw new Exception("Invalid Company Document");
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import truckmanagementproject.data.repositories.trips.TripRepository;
 import truckmanagementproject.services.models.milestones.AddMilestoneServiceModel;
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.services.milestones.MilestoneService;
+import truckmanagementproject.util.ValidationUtil;
 
 import javax.transaction.Transactional;
 
@@ -19,28 +20,33 @@ public class MilestoneServiceImpl implements MilestoneService {
     private final MilestoneRepository milestoneRepository;
     private final TripRepository tripRepository;
     private final ModelMapper mapper;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public MilestoneServiceImpl(MilestoneRepository milestoneRepository, TripRepository tripRepository, ModelMapper mapper) {
+    public MilestoneServiceImpl(MilestoneRepository milestoneRepository, TripRepository tripRepository, ModelMapper mapper, ValidationUtil validationUtil) {
         this.milestoneRepository = milestoneRepository;
         this.tripRepository = tripRepository;
         this.mapper = mapper;
+        this.validationUtil = validationUtil;
     }
 
     @Override
-    public void addCollection(AddMilestoneServiceModel collectionModel) {
+    public void addMilestone(AddMilestoneServiceModel collectionModel) throws Exception {
         Milestone collection = mapper.map(collectionModel, Milestone.class);
         Trip trip = tripRepository.getByReference(collectionModel.getTripReference());
         collection.setTrip(trip);
-        milestoneRepository.saveAndFlush(collection);
+
+        if (validationUtil.isValid(collection)) {
+            milestoneRepository.saveAndFlush(collection);
+        } else throw new Exception("Invalid milestone!");
     }
 
     @Override
     @Transactional
     public void updateMilestone(String id) {
-        Milestone one = milestoneRepository.getById(id);
-        one.setIsFinished(true);
-        milestoneRepository.saveAndFlush(one);
+        Milestone milestone = milestoneRepository.getById(id);
+        milestone.setIsFinished(true);
+        milestoneRepository.saveAndFlush(milestone);
     }
 
     @Override

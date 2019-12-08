@@ -9,9 +9,9 @@ import java.util.BitSet;
 import java.util.List;
 
 public interface ExpenseService {
-    void addTripExpense(AddTripExpenseServiceModel tripExpense);
+    void addTripExpense(AddTripExpenseServiceModel tripExpense) throws Exception;
 
-    void addVehicleExpense(AddVehicleExpenseServiceModel vehicleExpense);
+    void addVehicleExpense(AddVehicleExpenseServiceModel vehicleExpense) throws Exception;
 
     List<TripExpenseServiceModel> getAllTripExpensesByDriver(String username);
 

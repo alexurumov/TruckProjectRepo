@@ -4,7 +4,7 @@ import truckmanagementproject.services.models.milestones.AddMilestoneServiceMode
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 
 public interface MilestoneService {
-    void addCollection(AddMilestoneServiceModel collectionModel);
+    void addMilestone(AddMilestoneServiceModel collectionModel) throws Exception;
 
     void updateMilestone(String id);
 

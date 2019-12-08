@@ -8,6 +8,7 @@ import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
 import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.services.models.vehicles.AddVehicleServiceModel;
 import truckmanagementproject.services.models.vehicles.VehicleServiceModel;
+import truckmanagementproject.util.ValidationUtil;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,24 +19,26 @@ public class VehicleServiceImpl implements VehicleService {
 
     private final ModelMapper mapper;
     private final VehicleRepository vehicleRepository;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public VehicleServiceImpl(ModelMapper mapper, VehicleRepository vehicleRepository) {
+    public VehicleServiceImpl(ModelMapper mapper, VehicleRepository vehicleRepository, ValidationUtil validationUtil) {
         this.mapper = mapper;
         this.vehicleRepository = vehicleRepository;
+        this.validationUtil = validationUtil;
     }
 
     @Override
     public void registerVehicle(AddVehicleServiceModel model) throws Exception {
         if (vehicleRepository.existsByRegNumber(model.getRegNumber())) {
-            throw new Exception("Incorrect input");
+            throw new Exception("Invalid vehicle");
         }
 
         Vehicle vehicle = mapper.map(model, Vehicle.class);
 
-        //TODO implement Validator utils and VALIDATE Manager fields before adding to DB
-
-        vehicleRepository.saveAndFlush(vehicle);
+        if (validationUtil.isValid(vehicle)) {
+            vehicleRepository.saveAndFlush(vehicle);
+        } else throw new Exception("Invalid vehicle!");
 
     }
 

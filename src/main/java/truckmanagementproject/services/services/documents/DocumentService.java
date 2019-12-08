@@ -6,13 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface DocumentService {
-    void addTripDocument(AddTripDocServiceModel model);
+    void addTripDocument(AddTripDocServiceModel model) throws Exception;
 
-    void addDriverDocument(AddDriverDocServiceModel docServiceModel);
+    void addDriverDocument(AddDriverDocServiceModel docServiceModel) throws Exception;
 
-    void addVehicleDocument(AddVehicleDocServiceModel docServiceModel);
+    void addVehicleDocument(AddVehicleDocServiceModel docServiceModel) throws Exception;
 
-    void addCompanyDocument(AddCompanyDocServiceModel docServiceModel);
+    void addCompanyDocument(AddCompanyDocServiceModel docServiceModel) throws Exception;
 
     List<TripDocumentServiceModel> getAllTripDocs();
 

@@ -12,13 +12,13 @@ public interface TripService {
     List<TripServiceModel> getAllTripsByDriver(String driverUsername);
     boolean isReferenceTaken(String reference);
 
-    void addTrip(AddTripServiceModel tripServiceModel);
+    void addTrip(AddTripServiceModel tripServiceModel) throws Exception;
 
     List<TripServiceModel> getAllCurrent();
 
     TripServiceModel getTripByReference(String reference);
 
-    void finishTrip(FinishTripServiceModel tripServiceModel, String reference);
+    void finishTrip(FinishTripServiceModel tripServiceModel, String reference) throws Exception;
 
     List<TripServiceModel> getAllFinished();
 

@@ -10,6 +10,7 @@ import truckmanagementproject.services.services.validations.AddManagerValidation
 import truckmanagementproject.services.services.hashing.HashingService;
 import truckmanagementproject.services.services.managers.ManagerService;
 import truckmanagementproject.services.models.managers.AddManagerServiceModel;
+import truckmanagementproject.util.ValidationUtil;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,13 +23,15 @@ public class ManagerServiceImpl implements ManagerService {
     private final ModelMapper mapper;
     private final AddManagerValidationService addValidationService;
     private final HashingService hashingService;
+    private final ValidationUtil validationUtil;
 
     @Autowired
-    public ManagerServiceImpl(ManagerRepository managerRepository, ModelMapper mapper, AddManagerValidationService addValidationService, HashingService hashingService) {
+    public ManagerServiceImpl(ManagerRepository managerRepository, ModelMapper mapper, AddManagerValidationService addValidationService, HashingService hashingService, ValidationUtil validationUtil) {
         this.managerRepository = managerRepository;
         this.mapper = mapper;
         this.addValidationService = addValidationService;
         this.hashingService = hashingService;
+        this.validationUtil = validationUtil;
     }
 
     @Override
@@ -40,9 +43,10 @@ public class ManagerServiceImpl implements ManagerService {
         Manager manager = mapper.map(model, Manager.class);
         manager.setPassword(hashingService.hash(model.getPassword()));
 
-        //TODO implement Validator utils and VALIDATE Manager fields before adding to DB
+        if (validationUtil.isValid(manager)) {
+            managerRepository.saveAndFlush(manager);
+        } else throw new Exception("Invalid Manager");
 
-        managerRepository.saveAndFlush(manager);
     }
 
     @Override
