@@ -88,7 +88,7 @@ public class DocumentController {
             documentService.addTripDocument(tripDoc);
             modelAndView.setViewName("redirect:/documents/trip/all");
             return modelAndView;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return new ModelAndView("redirect:/documents/trip/add");
         }
     }
@@ -172,7 +172,7 @@ public class DocumentController {
 
             modelAndView.setViewName("redirect:/documents/vehicle/all");
             return modelAndView;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return new ModelAndView("redirect:/documents/vehicle/add");
         }
     }
@@ -245,7 +245,7 @@ public class DocumentController {
 
             modelAndView.setViewName("redirect:/documents/driver/all");
             return modelAndView;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return new ModelAndView("redirect:/documents/driver/add");
         }
     }
@@ -269,7 +269,7 @@ public class DocumentController {
                 .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
                 .collect(Collectors.toList());
         modelAndView.addObject("documents", documents);
-        modelAndView.setViewName("documents/vehicle/all");
+        modelAndView.setViewName("documents/driver/all");
         return modelAndView;
     }
 
@@ -306,7 +306,7 @@ public class DocumentController {
 
             modelAndView.setViewName("redirect:/documents/company/all");
             return modelAndView;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return new ModelAndView("redirect:/documents/company/add");
         }
     }
