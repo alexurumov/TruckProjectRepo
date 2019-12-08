@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import truckmanagementproject.data.models.expenses.Expense;
+import truckmanagementproject.data.models.expenses.TripExpense;
 import truckmanagementproject.data.models.trips.Trip;
 import truckmanagementproject.data.models.users.Driver;
 import truckmanagementproject.data.models.vehicles.Vehicle;
@@ -124,6 +125,13 @@ public class TripServiceImpl implements TripService {
                     model.setMilestones(milestones);
                     BigDecimal expenses = trip.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
                     model.setExpensesSum(expenses);
+
+                    BigDecimal price = BigDecimal.valueOf((trip.getEmptyKm() + trip.getTripKm()) * 1.09);
+                    price = price.add(expenses);
+                    if (trip.getAdr()) {
+                        price = price.add(BigDecimal.valueOf(50.00));
+                    }
+                    model.setPrice(price);
                     return model;
                 })
                 .collect(Collectors.toList());

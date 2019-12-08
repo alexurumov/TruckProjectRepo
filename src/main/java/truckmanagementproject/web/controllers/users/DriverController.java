@@ -34,23 +34,29 @@ public class DriverController {
     }
 
     @GetMapping("/add")
-    public String getAddDriverForm(@ModelAttribute("model") AddDriverModel model) {
-        return "add";
+    public ModelAndView getAddDriverForm(@ModelAttribute("model") AddDriverModel model,
+                                         ModelAndView modelAndView) {
+        modelAndView.setViewName("drivers/add");
+        return modelAndView;
     }
 
     @PostMapping("/add")
-    public String addDriver(@Valid @ModelAttribute("model") AddDriverModel model, BindingResult bindingResult) {
+    public ModelAndView addDriver(@Valid @ModelAttribute("model") AddDriverModel model,
+                                  ModelAndView modelAndView,
+                                  BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "add";
+            modelAndView.setViewName("drivers/add");
+            return modelAndView;
         }
 
         AddDriverServiceModel serviceModel = mapper.map(model, AddDriverServiceModel.class);
         try {
             driverService.registerDriver(serviceModel);
-            return "redirect:/drivers/all";
+            modelAndView.setViewName("redirect:/drivers/all");
+            return modelAndView;
         } catch (Exception e) {
-            return "redirect:/drivers/add";
+            return new ModelAndView("redirect:/drivers/add");
         }
     }
 

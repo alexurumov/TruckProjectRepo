@@ -30,7 +30,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         admin.setName("Administrator");
         admin.setUsername("admin");
-        admin.setPassword(hashingService.hash("Fleetmanageradmin123"));
+        admin.setPassword(hashingService.hash("123"));
 
         adminRepository.saveAndFlush(admin);
 

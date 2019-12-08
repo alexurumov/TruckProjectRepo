@@ -66,7 +66,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    @Transactional
     public List<TripExpenseServiceModel> getAllTripExpenses() {
         return tripExpenseRepository.findAll()
                 .stream()

@@ -43,9 +43,6 @@ public class Trip extends BaseEntity {
     @Column(name = "adr", nullable = false)
     private Boolean adr = false;
 
-    @Transient
-    private BigDecimal price;
-
     @Column(name = "empty_pallets")
     private Integer emptyPallets = 0;
 
@@ -63,20 +60,10 @@ public class Trip extends BaseEntity {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private List<Milestone> milestones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trip", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TripExpense> expenses = new ArrayList<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private List<TripDocument> documents = new ArrayList<>();
 
-    @PostLoad
-    private void postLoad() {
-        BigDecimal sum = BigDecimal.valueOf((this.getEmptyKm() + this.getTripKm()) * 1.09);
-        BigDecimal expenses = this.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-        sum = sum.add(expenses);
-        if (this.getAdr()) {
-            sum = sum.add(BigDecimal.valueOf(50.00));
-        }
-        this.price = sum;
-    }
 }

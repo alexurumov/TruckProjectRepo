@@ -25,6 +25,5 @@ public abstract class BaseEntity {
     )
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private String id;
-
 }
 
