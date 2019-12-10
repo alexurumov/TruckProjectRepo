@@ -31,7 +31,7 @@ public class Milestone extends BaseEntity {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "details")
+    @Column(name = "details", nullable = false)
     private String details;
 
     @Column(name = "is_finished", nullable = false)

@@ -6,6 +6,7 @@ import lombok.Setter;
 import truckmanagementproject.data.models.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -15,7 +16,8 @@ import java.util.Date;
 @NoArgsConstructor
 public abstract class Document extends BaseEntity {
 
-    @Column(name = "picture")
+    @Column(name = "picture", nullable = false)
+    @NotEmpty
     private String picture;
 
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import truckmanagementproject.data.models.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -16,5 +17,6 @@ import java.util.Date;
 public abstract class Expense extends BaseEntity {
 
     @Column(name = "cost", nullable = false)
+    @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal cost;
 }

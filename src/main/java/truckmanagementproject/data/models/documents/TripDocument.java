@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TripDocument extends Document {
 
-    @Column(name = "trip_document_type")
+    @Column(name = "trip_document_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TripDocumentType type;
 

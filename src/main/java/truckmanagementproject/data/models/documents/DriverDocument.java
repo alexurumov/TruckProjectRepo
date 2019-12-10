@@ -6,6 +6,8 @@ import lombok.Setter;
 import truckmanagementproject.data.models.users.Driver;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
@@ -15,11 +17,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class DriverDocument extends Document {
 
-    @Column(name = "driver_document_type")
+    @Column(name = "driver_document_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private DriverDocumentType type;
 
     @Column(name = "expiry_date", nullable = false)
+    @Future
     private LocalDate expiryDate;
 
     @ManyToOne

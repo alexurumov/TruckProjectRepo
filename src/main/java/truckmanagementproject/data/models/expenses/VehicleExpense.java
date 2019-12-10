@@ -26,7 +26,7 @@ public class VehicleExpense extends Expense {
     @Enumerated(EnumType.STRING)
     private Country country;
 
-    @Column(name = "picture")
+    @Column(name = "picture", nullable = false)
     private String picture;
 
     @ManyToOne

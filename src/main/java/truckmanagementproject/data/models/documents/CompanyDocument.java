@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
@@ -14,10 +16,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CompanyDocument extends Document {
 
-    @Column(name = "company_document_type")
+    @Column(name = "company_document_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private CompanyDocumentType type;
 
     @Column(name = "expiry_date", nullable = false)
+    @Future
     private LocalDate expiryDate;
 }
