@@ -5,6 +5,8 @@ import truckmanagementproject.services.models.trips.FinishTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
 import truckmanagementproject.web.models.expenses.AddTripExpenseModel;
 import truckmanagementproject.web.models.expenses.AddVehicleExpenseModel;
+import truckmanagementproject.web.models.trips.AddTripModel;
+import truckmanagementproject.web.models.trips.FinishTripModel;
 
 import java.util.Arrays;
 import java.util.BitSet;
@@ -29,4 +31,10 @@ public interface TripService {
     List<TripServiceModel> getAllTripsByVehicle(String id);
 
     List<TripServiceModel> getAllTripsByDriverId(String id);
+
+    boolean isAddTripModelValid(AddTripModel addTripModel);
+
+    boolean areAllMilestonesFinished(TripServiceModel trip);
+
+    boolean isFinishTripValid(FinishTripModel finishTripModel);
 }

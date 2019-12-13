@@ -51,6 +51,7 @@ public class TripController {
         this.mapper = mapper;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/add")
     public ModelAndView getTripAddForm(ModelAndView modelAndView) {
         List<DriverViewModel> drivers = driverService.getAllDrivers()
@@ -74,7 +75,7 @@ public class TripController {
                                 ModelAndView modelAndView,
                                 BindingResult bindingResult) {
 
-        if (!isAddTripModelValid(addTripModel)) {
+        if (!tripService.isAddTripModelValid(addTripModel)) {
             List<DriverViewModel> drivers = driverService.getAllDrivers()
                     .stream()
                     .map(driver -> mapper.map(driver, DriverViewModel.class))
@@ -109,6 +110,7 @@ public class TripController {
     @GetMapping("/current")
     public ModelAndView getAllCurrentTrips(ModelAndView modelAndView, HttpSession session) {
 
+        //TODO -> Try to move this logic to Interceptor
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
 
         if (user.getRole().equals("Driver")) {
@@ -134,6 +136,8 @@ public class TripController {
 
     @GetMapping("/finished")
     public ModelAndView getAllFinishedTrips(ModelAndView modelAndView, HttpSession session) {
+
+        //TODO -> Try to move this logic to Interceptor
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
 
         if (user.getRole().equals("Driver")) {
@@ -157,6 +161,7 @@ public class TripController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/finished/by-vehicle/{id}")
     public ModelAndView getAllFinishedTripsByVehicle(@PathVariable String id, ModelAndView modelAndView) {
         List<TripViewModel> trips = tripService.getAllTripsByVehicle(id)
@@ -169,6 +174,7 @@ public class TripController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/finished/by-driver/{id}")
     public ModelAndView getAllFinishedTripsByDriver(@PathVariable String id, ModelAndView modelAndView) {
         List<TripViewModel> trips = tripService.getAllTripsByDriverId(id)
@@ -205,6 +211,7 @@ public class TripController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/add-collection/{reference}")
     public ModelAndView getAddCollectionPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
         session.setAttribute("reference", reference);
@@ -218,7 +225,7 @@ public class TripController {
                                       ModelAndView modelAndView,
                                       HttpSession session) {
 
-        if (!isMilestoneValid(addMilestoneModel)) {
+        if (!milestoneService.isMilestoneValid(addMilestoneModel)) {
             session.setAttribute("reference", reference);
             modelAndView.addObject("isValid", false);
             modelAndView.setViewName("trips/add-collection");
@@ -237,6 +244,7 @@ public class TripController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/add-delivery/{reference}")
     public ModelAndView getAddDeliveryPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
         session.setAttribute("reference", reference);
@@ -250,7 +258,7 @@ public class TripController {
                                     ModelAndView modelAndView,
                                     HttpSession session) {
 
-        if (!isMilestoneValid(addMilestoneModel)) {
+        if (!milestoneService.isMilestoneValid(addMilestoneModel)) {
             session.setAttribute("reference", reference);
             modelAndView.addObject("isValid", false);
             modelAndView.setViewName("trips/add-delivery");
@@ -269,19 +277,13 @@ public class TripController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/finish-trip/{reference}")
     public ModelAndView getFinishTripPage(@PathVariable String reference, HttpSession session) {
 
         TripServiceModel trip = tripService.getTripByReference(reference);
-        boolean valid = true;
-        for (MilestoneServiceModel milestone : trip.getMilestones()) {
-            if (!milestone.getIsFinished()) {
-                valid = false;
-                break;
-            }
-        }
 
-        if (!valid) {
+        if (!tripService.areAllMilestonesFinished(trip)) {
             return new ModelAndView("redirect:/trips/details/" + reference);
         }
 
@@ -295,7 +297,7 @@ public class TripController {
                                    ModelAndView modelAndView,
                                    HttpSession session) {
 
-        if (!isFinishTripValid(finishTripModel)) {
+        if (!tripService.isFinishTripValid(finishTripModel)) {
             session.setAttribute("reference", reference);
             modelAndView.addObject("isValid", false);
             modelAndView.setViewName("trips/finish-trip");
@@ -311,6 +313,7 @@ public class TripController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/finish-milestone/{id}")
     private String finishMilestone(@PathVariable String id) {
         milestoneService.updateMilestone(id);
@@ -318,34 +321,11 @@ public class TripController {
         return "redirect:/trips/details/" + reference;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/remove/{reference}")
     public ModelAndView removeTrip(@PathVariable String reference) {
         this.tripService.remove(reference);
         return new ModelAndView("redirect:/trips/finished");
     }
 
-    private boolean isMilestoneValid(AddMilestoneModel addMilestoneModel) {
-        return !addMilestoneModel.getName().trim().isEmpty() &&
-                !addMilestoneModel.getAddress().trim().isEmpty() &&
-                !addMilestoneModel.getDetails().trim().isEmpty();
-    }
-
-    private boolean isAddTripModelValid(AddTripModel addTripModel) {
-        Pattern reference = Pattern.compile("[A-Z0-9]+");
-        Matcher refMatcher = reference.matcher(addTripModel.getReference());
-        if (!refMatcher.find()) {
-            return false;
-        }
-
-        return !tripService.isReferenceTaken(addTripModel.getReference()) &&
-                !addTripModel.getDriverName().equals("0") &&
-                !addTripModel.getDate().trim().isEmpty() &&
-                !addTripModel.getVehicleRegNumber().equals("0");
-    }
-
-    private boolean isFinishTripValid(FinishTripModel finishTripModel) {
-        return finishTripModel.getTripKm() != null &&
-                finishTripModel.getEmptyKm() != null &&
-                finishTripModel.getEmptyPallets() != null;
-    }
 }

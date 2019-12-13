@@ -18,10 +18,14 @@ import truckmanagementproject.services.models.trips.TripServiceModel;
 import truckmanagementproject.util.ValidationUtil;
 import truckmanagementproject.web.models.expenses.AddTripExpenseModel;
 import truckmanagementproject.web.models.expenses.AddVehicleExpenseModel;
+import truckmanagementproject.web.models.trips.AddTripModel;
+import truckmanagementproject.web.models.trips.FinishTripModel;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -165,5 +169,36 @@ public class TripServiceImpl implements TripService {
                 .stream()
                 .map(trip -> mapper.map(trip, TripServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAddTripModelValid(AddTripModel addTripModel) {
+        Pattern reference = Pattern.compile("[A-Z0-9]+");
+        Matcher refMatcher = reference.matcher(addTripModel.getReference());
+        if (!refMatcher.find()) {
+            return false;
+        }
+
+        return !this.isReferenceTaken(addTripModel.getReference()) &&
+                !addTripModel.getDriverName().equals("0") &&
+                !addTripModel.getDate().trim().isEmpty() &&
+                !addTripModel.getVehicleRegNumber().equals("0");
+    }
+
+    @Override
+    public boolean areAllMilestonesFinished(TripServiceModel trip) {
+        for (MilestoneServiceModel milestone : trip.getMilestones()) {
+            if (!milestone.getIsFinished()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isFinishTripValid(FinishTripModel finishTripModel) {
+        return finishTripModel.getTripKm() != null &&
+                finishTripModel.getEmptyKm() != null &&
+                finishTripModel.getEmptyPallets() != null;
     }
 }

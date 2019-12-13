@@ -11,6 +11,7 @@ import truckmanagementproject.services.models.milestones.AddMilestoneServiceMode
 import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.services.milestones.MilestoneService;
 import truckmanagementproject.util.ValidationUtil;
+import truckmanagementproject.web.models.milestones.AddMilestoneModel;
 
 import javax.transaction.Transactional;
 
@@ -52,5 +53,12 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public MilestoneServiceModel getById(String id) {
         return mapper.map(milestoneRepository.getById(id), MilestoneServiceModel.class);
+    }
+
+    @Override
+    public boolean isMilestoneValid(AddMilestoneModel addMilestoneModel) {
+        return !addMilestoneModel.getName().trim().isEmpty() &&
+                !addMilestoneModel.getAddress().trim().isEmpty() &&
+                !addMilestoneModel.getDetails().trim().isEmpty();
     }
 }
