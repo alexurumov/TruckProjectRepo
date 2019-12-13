@@ -33,6 +33,7 @@ public class DriverController {
         this.driverService = driverService;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN
     @GetMapping("/add")
     public ModelAndView getAddDriverForm(@ModelAttribute("model") AddDriverModel model,
                                          ModelAndView modelAndView) {
@@ -60,6 +61,7 @@ public class DriverController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN + MANAGER
     @GetMapping("/all")
     public ModelAndView getAllDrivers(ModelAndView modelAndView) {
         List<DriverViewModel> drivers = driverService.getAllDrivers()
@@ -72,6 +74,7 @@ public class DriverController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN
     @GetMapping("/remove/{id}")
     public ModelAndView removeDriver(@PathVariable String id) {
         driverService.removeDriver(id);

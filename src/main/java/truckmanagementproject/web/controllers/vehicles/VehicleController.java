@@ -33,6 +33,7 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN
     @GetMapping("/add")
     public String getAddVehicleForm(@ModelAttribute("model") AddVehicleModel model) {
         return "vehicles/add-vehicle";
@@ -54,6 +55,7 @@ public class VehicleController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN + MANAGER
     @GetMapping("/all")
     public ModelAndView getAllVehicles(ModelAndView modelAndView) {
         List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
@@ -66,6 +68,7 @@ public class VehicleController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN
     @GetMapping("/remove/{id}")
     public ModelAndView removeDriverDoc(@PathVariable String id) {
         vehicleService.removeVehicle(id);

@@ -34,6 +34,7 @@ public class ManagerController {
         this.managerService = managerService;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN
     @GetMapping("/add")
     public String getAddManagerForm(@ModelAttribute("model") AddManagerModel model) {
         return "managers/add";
@@ -55,6 +56,7 @@ public class ManagerController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN + MANAGER
     @GetMapping("/all")
     public ModelAndView getAllManagers(ModelAndView modelAndView) {
         List<ManagerViewModel> managers = managerService.getAllManagers()
@@ -67,6 +69,7 @@ public class ManagerController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM ADMIN
     @GetMapping("/remove/{id}")
     public ModelAndView removeManager(@PathVariable String id) {
         managerService.removeManager(id);
