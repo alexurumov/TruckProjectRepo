@@ -4,6 +4,8 @@ import truckmanagementproject.services.models.expenses.AddTripExpenseServiceMode
 import truckmanagementproject.services.models.expenses.AddVehicleExpenseServiceModel;
 import truckmanagementproject.services.models.expenses.TripExpenseServiceModel;
 import truckmanagementproject.services.models.expenses.VehicleExpenseServiceModel;
+import truckmanagementproject.web.models.expenses.AddTripExpenseModel;
+import truckmanagementproject.web.models.expenses.AddVehicleExpenseModel;
 
 import java.util.BitSet;
 import java.util.List;
@@ -26,4 +28,8 @@ public interface ExpenseService {
     void removeVehicleExpense(String id);
 
     List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String id);
+
+    boolean isTripExpenseValid(AddTripExpenseModel addTripExpenseModel);
+
+    boolean isVehicleExpenseValid(AddVehicleExpenseModel addVehicleExpenseModel);
 }

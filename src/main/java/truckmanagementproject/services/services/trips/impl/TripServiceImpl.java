@@ -166,24 +166,4 @@ public class TripServiceImpl implements TripService {
                 .map(trip -> mapper.map(trip, TripServiceModel.class))
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public boolean isTripExpenseValid(AddTripExpenseModel addTripExpenseModel) {
-        if (addTripExpenseModel.getDate().trim().isEmpty()) {
-            return false;
-        }
-        return !addTripExpenseModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addTripExpenseModel.getTripRef().equals("0") &&
-                addTripExpenseModel.getCost().compareTo(BigDecimal.ZERO) > 0;
-    }
-
-    @Override
-    public boolean isVehicleExpenseValid(AddVehicleExpenseModel addVehicleExpenseModel) {
-        if (addVehicleExpenseModel.getDate().trim().isEmpty()) {
-            return false;
-        }
-        return !addVehicleExpenseModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addVehicleExpenseModel.getVehicleRegNumber().equals("0") &&
-                addVehicleExpenseModel.getCost().compareTo(BigDecimal.ZERO) > 0;
-    }
 }

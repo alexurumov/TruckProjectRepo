@@ -68,7 +68,7 @@ public class ExpenseController {
                                        ModelAndView modelAndView,
                                        HttpSession session) {
 
-        if (!tripService.isTripExpenseValid(addTripExpenseModel)) {
+        if (!expenseService.isTripExpenseValid(addTripExpenseModel)) {
             LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
             String driverUsername = user.getUsername();
 
@@ -158,7 +158,7 @@ public class ExpenseController {
     public ModelAndView addVehicleExpense(@ModelAttribute AddVehicleExpenseModel addVehicleExpenseModel,
                                           ModelAndView modelAndView) {
 
-        if (!tripService.isVehicleExpenseValid(addVehicleExpenseModel)) {
+        if (!expenseService.isVehicleExpenseValid(addVehicleExpenseModel)) {
 
             List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
                     .stream()

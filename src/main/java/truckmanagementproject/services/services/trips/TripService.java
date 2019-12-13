@@ -29,8 +29,4 @@ public interface TripService {
     List<TripServiceModel> getAllTripsByVehicle(String id);
 
     List<TripServiceModel> getAllTripsByDriverId(String id);
-
-    boolean isTripExpenseValid(AddTripExpenseModel addTripExpenseModel);
-
-    boolean isVehicleExpenseValid(AddVehicleExpenseModel addVehicleExpenseModel);
 }
