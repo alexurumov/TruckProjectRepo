@@ -1,6 +1,10 @@
 package truckmanagementproject.services.services.documents;
 
 import truckmanagementproject.services.models.documents.*;
+import truckmanagementproject.web.models.documents.AddCompanyDocumentModel;
+import truckmanagementproject.web.models.documents.AddDriverDocumentModel;
+import truckmanagementproject.web.models.documents.AddTripDocumentModel;
+import truckmanagementproject.web.models.documents.AddVehicleDocumentModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,4 +41,12 @@ public interface DocumentService {
     void removeCompanyDocument(String id);
 
     List<DriverDocumentServiceModel> getAllDriverDocsByDriver(String id);
+
+    boolean isTripDocValid(AddTripDocumentModel addTripDocumentModel);
+
+    boolean isVehicleDocValid(AddVehicleDocumentModel addVehicleDocumentModel);
+
+    boolean isDriverDocValid(AddDriverDocumentModel addDriverDocumentModel);
+
+    boolean isCompanyDocValid(AddCompanyDocumentModel addCompanyDocumentModel);
 }

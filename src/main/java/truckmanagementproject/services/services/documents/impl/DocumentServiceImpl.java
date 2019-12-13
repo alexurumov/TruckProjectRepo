@@ -20,8 +20,14 @@ import truckmanagementproject.data.repositories.vehicles.VehicleRepository;
 import truckmanagementproject.services.models.documents.*;
 import truckmanagementproject.services.services.documents.DocumentService;
 import truckmanagementproject.util.ValidationUtil;
+import truckmanagementproject.web.models.documents.AddCompanyDocumentModel;
+import truckmanagementproject.web.models.documents.AddDriverDocumentModel;
+import truckmanagementproject.web.models.documents.AddTripDocumentModel;
+import truckmanagementproject.web.models.documents.AddVehicleDocumentModel;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -186,5 +192,48 @@ public class DocumentServiceImpl implements DocumentService {
                 .stream()
                 .map(doc -> mapper.map(doc, DriverDocumentServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isTripDocValid(AddTripDocumentModel addTripDocumentModel) {
+        return !addTripDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addTripDocumentModel.getTripRef().equals("0");
+    }
+
+    @Override
+    public boolean isVehicleDocValid(AddVehicleDocumentModel addVehicleDocumentModel) {
+        if (addVehicleDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addVehicleDocumentModel.getExpiryDate(), formatter);
+
+        return expiryDate.isAfter(LocalDate.now()) &&
+                !addVehicleDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addVehicleDocumentModel.getRegNumber().equals("0");
+    }
+
+    @Override
+    public boolean isDriverDocValid(AddDriverDocumentModel addDriverDocumentModel) {
+        if (addDriverDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addDriverDocumentModel.getExpiryDate(), formatter);
+        return expiryDate.isAfter(LocalDate.now()) &&
+                !addDriverDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addDriverDocumentModel.getDriverName().equals("0");
+    }
+
+    @Override
+    public boolean isCompanyDocValid(AddCompanyDocumentModel addCompanyDocumentModel) {
+        if (addCompanyDocumentModel.getExpiryDate().trim().isEmpty()) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate expiryDate = LocalDate.parse(addCompanyDocumentModel.getExpiryDate(), formatter);
+
+        return expiryDate.isAfter(LocalDate.now()) &&
+                !addCompanyDocumentModel.getPicture().getOriginalFilename().isEmpty();
     }
 }

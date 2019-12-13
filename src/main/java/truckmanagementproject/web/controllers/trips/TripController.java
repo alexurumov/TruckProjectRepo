@@ -206,7 +206,7 @@ public class TripController {
     }
 
     @GetMapping("/add-collection/{reference}")
-    public ModelAndView getAddCollectionPage (@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAddCollectionPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
         session.setAttribute("reference", reference);
         modelAndView.setViewName("/trips/add-collection");
         return modelAndView;
@@ -238,7 +238,7 @@ public class TripController {
     }
 
     @GetMapping("/add-delivery/{reference}")
-    public ModelAndView getAddDeliveryPage (@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAddDeliveryPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
         session.setAttribute("reference", reference);
         modelAndView.setViewName("/trips/add-delivery");
         return modelAndView;
@@ -246,9 +246,9 @@ public class TripController {
 
     @PostMapping("/add-delivery/{reference}")
     public ModelAndView addDelivery(@ModelAttribute AddMilestoneModel addMilestoneModel,
-                                      @PathVariable String reference,
-                                      ModelAndView modelAndView,
-                                      HttpSession session) {
+                                    @PathVariable String reference,
+                                    ModelAndView modelAndView,
+                                    HttpSession session) {
 
         if (!isMilestoneValid(addMilestoneModel)) {
             session.setAttribute("reference", reference);
@@ -270,7 +270,7 @@ public class TripController {
     }
 
     @GetMapping("/finish-trip/{reference}")
-    public ModelAndView getFinishTripPage (@PathVariable String reference, HttpSession session) {
+    public ModelAndView getFinishTripPage(@PathVariable String reference, HttpSession session) {
 
         TripServiceModel trip = tripService.getTripByReference(reference);
         boolean valid = true;
@@ -291,9 +291,9 @@ public class TripController {
 
     @PostMapping("/finish-trip/{reference}")
     public ModelAndView finishTrip(@ModelAttribute FinishTripModel finishTripModel,
-                                      @PathVariable String reference,
-                                      ModelAndView modelAndView,
-                                      HttpSession session) {
+                                   @PathVariable String reference,
+                                   ModelAndView modelAndView,
+                                   HttpSession session) {
 
         if (!isFinishTripValid(finishTripModel)) {
             session.setAttribute("reference", reference);

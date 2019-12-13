@@ -49,6 +49,7 @@ public class DocumentController {
         this.cloudinaryService = cloudinaryService;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/trip/add")
     public ModelAndView getAddTripDocPage(ModelAndView modelAndView,
                                           HttpSession session) {
@@ -67,7 +68,8 @@ public class DocumentController {
 
     @PostMapping("/trip/add")
     public ModelAndView addTripDoc(AddTripDocumentModel addTripDocumentModel, ModelAndView modelAndView, HttpSession session) {
-        if (!isTripDocValid(addTripDocumentModel)) {
+        if (!documentService.isTripDocValid(addTripDocumentModel)) {
+            //TODO -> Try to move this logic to Interceptor
             LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
             String driverUsername = user.getUsername();
 
@@ -96,6 +98,7 @@ public class DocumentController {
     @GetMapping("/trip/all")
     public ModelAndView getAllTripDocs(ModelAndView modelAndView, HttpSession session) {
 
+        //TODO -> Try to move this logic to Interceptor
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
 
         if (user.getRole().equals("Driver")) {
@@ -116,6 +119,7 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/trip/remove/{id}")
     public ModelAndView removeTripDoc(@PathVariable String id) {
         documentService.removeTripDocument(id);
@@ -133,6 +137,7 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/add")
     public ModelAndView getAddVehicleDocPage(ModelAndView modelAndView) {
         modelAndView.setViewName("documents/vehicle/add");
@@ -148,7 +153,7 @@ public class DocumentController {
     @PostMapping("vehicle/add")
     public ModelAndView addVehicleDoc(@ModelAttribute AddVehicleDocumentModel addVehicleDocumentModel, ModelAndView modelAndView) {
 
-        if (!isVehicleDocValid(addVehicleDocumentModel)) {
+        if (!documentService.isVehicleDocValid(addVehicleDocumentModel)) {
             List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
                     .stream()
                     .map(driver -> mapper.map(driver, VehicleViewModel.class))
@@ -177,9 +182,11 @@ public class DocumentController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/all")
     public ModelAndView getAllVehicleDocs(ModelAndView modelAndView, HttpSession session) {
 
+        //TODO -> Try to move this logic to Interceptor
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocs()
                 .stream()
                 .map(doc -> mapper.map(doc, VehicleDocumentViewModel.class))
@@ -189,8 +196,11 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/{id}")
     public ModelAndView getVehicleDocumentsByTrip(@PathVariable String id, ModelAndView modelAndView) {
+
+        //TODO -> Try to move this logic to Interceptor
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocumentsByVehicle(id)
                 .stream()
                 .map(doc -> mapper.map(doc, VehicleDocumentViewModel.class))
@@ -200,14 +210,18 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/remove/{id}")
     public ModelAndView removeVehicleDoc(@PathVariable String id) {
         documentService.removeVehicleDocument(id);
         return new ModelAndView("redirect:/documents/vehicle/all");
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/add")
     public ModelAndView getAddDriverDocPage(ModelAndView modelAndView) {
+
+        //TODO -> Try to move this logic to Interceptor
         modelAndView.setViewName("documents/driver/add");
         List<DriverViewModel> drivers = driverService.getAllDrivers()
                 .stream()
@@ -221,7 +235,7 @@ public class DocumentController {
     @PostMapping("driver/add")
     public ModelAndView addDriverDoc(@ModelAttribute AddDriverDocumentModel addDriverDocumentModel, ModelAndView modelAndView) {
 
-        if (!isDriverDocValid(addDriverDocumentModel)) {
+        if (!documentService.isDriverDocValid(addDriverDocumentModel)) {
             List<DriverViewModel> drivers = driverService.getAllDrivers()
                     .stream()
                     .map(driver -> mapper.map(driver, DriverViewModel.class))
@@ -250,9 +264,11 @@ public class DocumentController {
         }
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/all")
     public ModelAndView getAllDriverDocs(ModelAndView modelAndView, HttpSession session) {
 
+        //TODO -> Try to move this logic to Interceptor
         List<DriverDocumentViewModel> documents = documentService.getAllDriverDocs()
                 .stream()
                 .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
@@ -262,8 +278,11 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/{id}")
     public ModelAndView getDriverDocumentsByDriver(@PathVariable String id, ModelAndView modelAndView) {
+
+        //TODO -> Try to move this logic to Interceptor
         List<DriverDocumentViewModel> documents = documentService.getAllDriverDocsByDriver(id)
                 .stream()
                 .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
@@ -273,12 +292,14 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/remove/{id}")
     public ModelAndView removeDriverDoc(@PathVariable String id) {
         documentService.removeDriverDocument(id);
         return new ModelAndView("redirect:/documents/driver/all");
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/company/add")
     public ModelAndView getAddCompanyDocPage(ModelAndView modelAndView) {
         modelAndView.setViewName("documents/company/add");
@@ -288,7 +309,7 @@ public class DocumentController {
     @PostMapping("company/add")
     public ModelAndView addCompanyDoc(@ModelAttribute AddCompanyDocumentModel addCompanyDocumentModel, ModelAndView modelAndView) {
 
-        if (!isCompanyDocValid(addCompanyDocumentModel)) {
+        if (!documentService.isCompanyDocValid(addCompanyDocumentModel)) {
             modelAndView.setViewName("documents/company/add");
             modelAndView.addObject("isValid", false);
             return modelAndView;
@@ -323,48 +344,11 @@ public class DocumentController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/company/remove/{id}")
     public ModelAndView removeCompanyDoc(@PathVariable String id) {
         documentService.removeCompanyDocument(id);
         return new ModelAndView("redirect:/documents/company/all");
     }
 
-    private boolean isTripDocValid(AddTripDocumentModel addTripDocumentModel) {
-        return !addTripDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addTripDocumentModel.getTripRef().equals("0");
-    }
-
-    private boolean isDriverDocValid(AddDriverDocumentModel addDriverDocumentModel) {
-        if (addDriverDocumentModel.getExpiryDate().trim().isEmpty()) {
-            return false;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate expiryDate = LocalDate.parse(addDriverDocumentModel.getExpiryDate(), formatter);
-        return expiryDate.isAfter(LocalDate.now()) &&
-                !addDriverDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addDriverDocumentModel.getDriverName().equals("0");
-    }
-
-    private boolean isVehicleDocValid(AddVehicleDocumentModel addVehicleDocumentModel) {
-        if (addVehicleDocumentModel.getExpiryDate().trim().isEmpty()) {
-            return false;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate expiryDate = LocalDate.parse(addVehicleDocumentModel.getExpiryDate(), formatter);
-
-        return expiryDate.isAfter(LocalDate.now()) &&
-                !addVehicleDocumentModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addVehicleDocumentModel.getRegNumber().equals("0");
-    }
-
-    private boolean isCompanyDocValid(AddCompanyDocumentModel addCompanyDocumentModel) {
-        if (addCompanyDocumentModel.getExpiryDate().trim().isEmpty()) {
-            return false;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate expiryDate = LocalDate.parse(addCompanyDocumentModel.getExpiryDate(), formatter);
-
-        return expiryDate.isAfter(LocalDate.now()) &&
-                !addCompanyDocumentModel.getPicture().getOriginalFilename().isEmpty();
-    }
 }
