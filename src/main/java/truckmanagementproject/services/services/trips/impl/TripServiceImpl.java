@@ -16,6 +16,8 @@ import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.models.trips.AddTripServiceModel;
 import truckmanagementproject.services.models.trips.TripServiceModel;
 import truckmanagementproject.util.ValidationUtil;
+import truckmanagementproject.web.models.expenses.AddTripExpenseModel;
+import truckmanagementproject.web.models.expenses.AddVehicleExpenseModel;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -163,5 +165,25 @@ public class TripServiceImpl implements TripService {
                 .stream()
                 .map(trip -> mapper.map(trip, TripServiceModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isTripExpenseValid(AddTripExpenseModel addTripExpenseModel) {
+        if (addTripExpenseModel.getDate().trim().isEmpty()) {
+            return false;
+        }
+        return !addTripExpenseModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addTripExpenseModel.getTripRef().equals("0") &&
+                addTripExpenseModel.getCost().compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    @Override
+    public boolean isVehicleExpenseValid(AddVehicleExpenseModel addVehicleExpenseModel) {
+        if (addVehicleExpenseModel.getDate().trim().isEmpty()) {
+            return false;
+        }
+        return !addVehicleExpenseModel.getPicture().getOriginalFilename().isEmpty() &&
+                !addVehicleExpenseModel.getVehicleRegNumber().equals("0") &&
+                addVehicleExpenseModel.getCost().compareTo(BigDecimal.ZERO) > 0;
     }
 }

@@ -54,6 +54,7 @@ public class DocumentController {
     public ModelAndView getAddTripDocPage(ModelAndView modelAndView,
                                           HttpSession session) {
 
+        //TODO -> Try to move this logic to Interceptor
         modelAndView.setViewName("/documents/trip/add");
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
         String driverUsername = user.getUsername();

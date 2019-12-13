@@ -46,8 +46,11 @@ public class ExpenseController {
         this.mapper = mapper;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/trip/add")
     public ModelAndView getAddTripExpensePage(ModelAndView modelAndView, HttpSession session) {
+
+        //TODO -> Try to move this logic to Interceptor
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
         String driverUsername = user.getUsername();
 
@@ -65,7 +68,7 @@ public class ExpenseController {
                                        ModelAndView modelAndView,
                                        HttpSession session) {
 
-        if (!isTripExpenseValid(addTripExpenseModel)) {
+        if (!tripService.isTripExpenseValid(addTripExpenseModel)) {
             LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
             String driverUsername = user.getUsername();
 
@@ -101,6 +104,7 @@ public class ExpenseController {
     public ModelAndView getAllTripExpenses(ModelAndView modelAndView, HttpSession session) {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
 
+        //TODO -> Try to move this logic to Interceptor
         if (user.getRole().equals("Driver")) {
             List<TripExpenseViewModel> expenses = expenseService.getAllTripExpensesByDriver(user.getUsername())
                     .stream()
@@ -119,6 +123,7 @@ public class ExpenseController {
         return modelAndView;
     }
 
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/trip/remove/{id}")
     public ModelAndView removeTripExpense(@PathVariable String id) {
         expenseService.removeTripExpense(id);
@@ -136,36 +141,7 @@ public class ExpenseController {
         return modelAndView;
     }
 
-    @GetMapping("/vehicle/all")
-    public ModelAndView getAllVehicleExpenses(ModelAndView modelAndView, HttpSession session) {
-
-        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpenses()
-                .stream()
-                .map(expense -> mapper.map(expense, VehicleExpenseViewModel.class))
-                .collect(Collectors.toList());
-        modelAndView.addObject("expenses", expenses);
-        modelAndView.setViewName("expenses/vehicle/all");
-
-        return modelAndView;
-    }
-
-    @GetMapping("/vehicle/remove/{id}")
-    public ModelAndView removeVehicleExpense(@PathVariable String id) {
-        expenseService.removeVehicleExpense(id);
-        return new ModelAndView("redirect:/expenses/vehicle/all");
-    }
-
-    @GetMapping("/vehicle/{id}")
-    public ModelAndView getVehicleExpensesByTrip(@PathVariable String id, ModelAndView modelAndView) {
-        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpensesByVehicle(id)
-                .stream()
-                .map(exp -> mapper.map(exp, VehicleExpenseViewModel.class))
-                .collect(Collectors.toList());
-        modelAndView.addObject("expenses", expenses);
-        modelAndView.setViewName("expenses/vehicle/all");
-        return modelAndView;
-    }
-
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/add")
     public ModelAndView getAddVehicleExpensePage(ModelAndView modelAndView) {
 
@@ -182,7 +158,7 @@ public class ExpenseController {
     public ModelAndView addVehicleExpense(@ModelAttribute AddVehicleExpenseModel addVehicleExpenseModel,
                                           ModelAndView modelAndView) {
 
-        if (!isVehicleExpenseValid(addVehicleExpenseModel)) {
+        if (!tripService.isVehicleExpenseValid(addVehicleExpenseModel)) {
 
             List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
                     .stream()
@@ -212,22 +188,37 @@ public class ExpenseController {
         }
     }
 
-    private boolean isVehicleExpenseValid(AddVehicleExpenseModel addVehicleExpenseModel) {
-        if (addVehicleExpenseModel.getDate().trim().isEmpty()) {
-            return false;
-        }
-        return !addVehicleExpenseModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addVehicleExpenseModel.getVehicleRegNumber().equals("0") &&
-                addVehicleExpenseModel.getCost().compareTo(BigDecimal.ZERO) > 0;
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
+    @GetMapping("/vehicle/all")
+    public ModelAndView getAllVehicleExpenses(ModelAndView modelAndView, HttpSession session) {
+
+        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpenses()
+                .stream()
+                .map(expense -> mapper.map(expense, VehicleExpenseViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("expenses", expenses);
+        modelAndView.setViewName("expenses/vehicle/all");
+
+        return modelAndView;
     }
 
-
-    private boolean isTripExpenseValid(AddTripExpenseModel addTripExpenseModel) {
-        if (addTripExpenseModel.getDate().trim().isEmpty()) {
-            return false;
-        }
-        return !addTripExpenseModel.getPicture().getOriginalFilename().isEmpty() &&
-                !addTripExpenseModel.getTripRef().equals("0") &&
-                addTripExpenseModel.getCost().compareTo(BigDecimal.ZERO) > 0;
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
+    @GetMapping("/vehicle/remove/{id}")
+    public ModelAndView removeVehicleExpense(@PathVariable String id) {
+        expenseService.removeVehicleExpense(id);
+        return new ModelAndView("redirect:/expenses/vehicle/all");
     }
+
+    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
+    @GetMapping("/vehicle/{id}")
+    public ModelAndView getVehicleExpensesByTrip(@PathVariable String id, ModelAndView modelAndView) {
+        List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpensesByVehicle(id)
+                .stream()
+                .map(exp -> mapper.map(exp, VehicleExpenseViewModel.class))
+                .collect(Collectors.toList());
+        modelAndView.addObject("expenses", expenses);
+        modelAndView.setViewName("expenses/vehicle/all");
+        return modelAndView;
+    }
+
 }
