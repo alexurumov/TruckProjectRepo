@@ -72,8 +72,7 @@ public class TripController {
 
     @PostMapping("/add")
     public ModelAndView tripAdd(@ModelAttribute AddTripModel addTripModel,
-                                ModelAndView modelAndView,
-                                BindingResult bindingResult) {
+                                ModelAndView modelAndView) {
 
         if (!tripService.isAddTripModelValid(addTripModel)) {
             List<DriverViewModel> drivers = driverService.getAllDrivers()

@@ -6,6 +6,7 @@ import lombok.Setter;
 import truckmanagementproject.data.models.BaseEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
@@ -21,9 +22,11 @@ public abstract class User extends BaseEntity {
     private String role;
 
     @Column(name = "name", nullable = false)
+    @Pattern(regexp = "^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$")
     private String name;
 
     @Column(name = "username", nullable = false)
+    @Pattern(regexp = "[A-Z]{2}.+")
     private String username;
 
     @Column(name = "password", nullable = false)

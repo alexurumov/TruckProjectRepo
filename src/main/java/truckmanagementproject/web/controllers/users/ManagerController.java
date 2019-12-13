@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.managers.ManagerService;
 import truckmanagementproject.services.models.managers.AddManagerServiceModel;
-import truckmanagementproject.web.models.drivers.DriverViewModel;
 import truckmanagementproject.web.models.managers.AddManagerModel;
 import truckmanagementproject.web.models.managers.ManagerViewModel;
 
@@ -44,7 +43,7 @@ public class ManagerController {
     public String addManager(@Valid @ModelAttribute("model") AddManagerModel model, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "add";
+            return "managers/add";
         }
 
         AddManagerServiceModel serviceModel = mapper.map(model, AddManagerServiceModel.class);
