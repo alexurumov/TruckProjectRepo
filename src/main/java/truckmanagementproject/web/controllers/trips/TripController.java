@@ -109,55 +109,15 @@ public class TripController {
     @GetMapping("/current")
     public ModelAndView getAllCurrentTrips(ModelAndView modelAndView, HttpSession session) {
 
-        //TODO -> Try to move this logic to Interceptor
-        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-
-        if (user.getRole().equals("Driver")) {
-            String driverUsername = user.getUsername();
-            List<TripViewModel> trips = tripService.getAllTripsByDriver(driverUsername)
-                    .stream()
-                    .filter(trip -> !trip.getIsFinished())
-                    .map(trip -> mapper.map(trip, TripViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("trips", trips);
-            modelAndView.setViewName("trips/all-current");
-            return modelAndView;
-        } else {
-            List<TripViewModel> trips = tripService.getAllCurrent()
-                    .stream()
-                    .map(trip -> mapper.map(trip, TripViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("trips", trips);
-            modelAndView.setViewName("trips/all-current");
-            return modelAndView;
-        }
+        modelAndView.setViewName("trips/all-current");
+        return modelAndView;
     }
 
     @GetMapping("/finished")
     public ModelAndView getAllFinishedTrips(ModelAndView modelAndView, HttpSession session) {
 
-        //TODO -> Try to move this logic to Interceptor
-        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-
-        if (user.getRole().equals("Driver")) {
-            String driverUsername = user.getUsername();
-            List<TripViewModel> trips = tripService.getAllTripsByDriver(driverUsername)
-                    .stream()
-                    .filter(TripServiceModel::getIsFinished)
-                    .map(trip -> mapper.map(trip, TripViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("trips", trips);
-            modelAndView.setViewName("trips/all-finished");
-            return modelAndView;
-        } else {
-            List<TripViewModel> trips = tripService.getAllFinished()
-                    .stream()
-                    .map(trip -> mapper.map(trip, TripViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("trips", trips);
-            modelAndView.setViewName("trips/all-finished");
-            return modelAndView;
-        }
+        modelAndView.setViewName("trips/all-finished");
+        return modelAndView;
     }
 
     //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
