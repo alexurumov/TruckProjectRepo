@@ -67,7 +67,7 @@ public class DriverController {
     @GetMapping("/all")
     public ModelAndView getAllDrivers(ModelAndView modelAndView, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user) && !authService.isUserAdmin(user)) {
+        if (!authService.isUserAdmin(user) && !authService.isUserManager(user)) {
             throw new Exception("Unauthorized user");
         }
         List<DriverViewModel> drivers = driverService.getAllDrivers()
