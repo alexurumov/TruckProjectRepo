@@ -50,7 +50,6 @@ public class ExpenseController {
     @GetMapping("/trip/add")
     public ModelAndView getAddTripExpensePage(ModelAndView modelAndView, HttpSession session) {
 
-        //TODO -> Try to move this logic to Interceptor
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
         String driverUsername = user.getUsername();
 
@@ -102,24 +101,7 @@ public class ExpenseController {
 
     @GetMapping("/trip/all")
     public ModelAndView getAllTripExpenses(ModelAndView modelAndView, HttpSession session) {
-        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
 
-        //TODO -> Try to move this logic to Interceptor
-        if (user.getRole().equals("Driver")) {
-            List<TripExpenseViewModel> expenses = expenseService.getAllTripExpensesByDriver(user.getUsername())
-                    .stream()
-                    .map(expense -> mapper.map(expense, TripExpenseViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("expenses", expenses);
-            modelAndView.setViewName("expenses/trip/all");
-        } else {
-            List<TripExpenseViewModel> expenses = expenseService.getAllTripExpenses()
-                    .stream()
-                    .map(expense -> mapper.map(expense, TripExpenseViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("expenses", expenses);
-            modelAndView.setViewName("expenses/trip/all");
-        }
         return modelAndView;
     }
 
