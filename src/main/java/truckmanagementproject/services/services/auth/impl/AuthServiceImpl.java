@@ -12,6 +12,7 @@ import truckmanagementproject.data.repositories.users.ManagerRepository;
 import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.hashing.HashingService;
 import truckmanagementproject.services.models.auth.LoginUserServiceModel;
+import truckmanagementproject.web.models.auth.LoginUserViewModel;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -50,5 +51,20 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isUserDriver(LoginUserViewModel user) {
+        return user != null && user.getRole().equals("Driver");
+    }
+
+    @Override
+    public boolean isUserManager(LoginUserViewModel user) {
+        return user != null && user.getRole().equals("Manager");
+    }
+
+    @Override
+    public boolean isUserAdmin(LoginUserViewModel user) {
+        return user != null && user.getRole().equals("Admin");
     }
 }

@@ -3,12 +3,11 @@ package truckmanagementproject.web.controllers.trips;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.models.milestones.AddMilestoneServiceModel;
-import truckmanagementproject.services.models.milestones.MilestoneServiceModel;
 import truckmanagementproject.services.models.trips.FinishTripServiceModel;
+import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.drivers.DriverService;
 import truckmanagementproject.services.services.milestones.MilestoneService;
 import truckmanagementproject.services.services.trips.TripService;
@@ -28,8 +27,6 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,20 +37,27 @@ public class TripController {
     private final VehicleService vehicleService;
     private final TripService tripService;
     private final MilestoneService milestoneService;
+    private final AuthService authService;
     private final ModelMapper mapper;
 
     @Autowired
-    public TripController(DriverService driverService, VehicleService vehicleService, TripService tripService, MilestoneService milestoneService, ModelMapper mapper) {
+    public TripController(DriverService driverService, VehicleService vehicleService, TripService tripService, MilestoneService milestoneService, AuthService authService, ModelMapper mapper) {
         this.driverService = driverService;
         this.vehicleService = vehicleService;
         this.tripService = tripService;
         this.milestoneService = milestoneService;
+        this.authService = authService;
         this.mapper = mapper;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/add")
-    public ModelAndView getTripAddForm(ModelAndView modelAndView) {
+    public ModelAndView getTripAddForm(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserDriver(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         List<DriverViewModel> drivers = driverService.getAllDrivers()
                 .stream()
                 .map(driver -> mapper.map(driver, DriverViewModel.class))
@@ -120,9 +124,14 @@ public class TripController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/finished/by-vehicle/{id}")
-    public ModelAndView getAllFinishedTripsByVehicle(@PathVariable String id, ModelAndView modelAndView) {
+    public ModelAndView getAllFinishedTripsByVehicle(@PathVariable String id, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         List<TripViewModel> trips = tripService.getAllTripsByVehicle(id)
                 .stream()
                 .filter(TripServiceModel::getIsFinished)
@@ -133,9 +142,14 @@ public class TripController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/finished/by-driver/{id}")
-    public ModelAndView getAllFinishedTripsByDriver(@PathVariable String id, ModelAndView modelAndView) {
+    public ModelAndView getAllFinishedTripsByDriver(@PathVariable String id, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         List<TripViewModel> trips = tripService.getAllTripsByDriverId(id)
                 .stream()
                 .filter(TripServiceModel::getIsFinished)
@@ -170,9 +184,14 @@ public class TripController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/add-collection/{reference}")
-    public ModelAndView getAddCollectionPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAddCollectionPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         session.setAttribute("reference", reference);
         modelAndView.setViewName("/trips/add-collection");
         return modelAndView;
@@ -203,9 +222,14 @@ public class TripController {
         }
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/add-delivery/{reference}")
-    public ModelAndView getAddDeliveryPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAddDeliveryPage(@PathVariable String reference, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         session.setAttribute("reference", reference);
         modelAndView.setViewName("/trips/add-delivery");
         return modelAndView;
@@ -236,9 +260,13 @@ public class TripController {
         }
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/finish-trip/{reference}")
-    public ModelAndView getFinishTripPage(@PathVariable String reference, HttpSession session) {
+    public ModelAndView getFinishTripPage(@PathVariable String reference, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserDriver(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         TripServiceModel trip = tripService.getTripByReference(reference);
 
@@ -272,17 +300,27 @@ public class TripController {
         }
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/finish-milestone/{id}")
-    private String finishMilestone(@PathVariable String id) {
+    private String finishMilestone(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserDriver(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         milestoneService.updateMilestone(id);
         String reference = milestoneService.getById(id).getTripReference();
         return "redirect:/trips/details/" + reference;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/remove/{reference}")
-    public ModelAndView removeTrip(@PathVariable String reference) {
+    public ModelAndView removeTrip(@PathVariable String reference, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         this.tripService.remove(reference);
         return new ModelAndView("redirect:/trips/finished");
     }
