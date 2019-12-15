@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.cloudinary.CloudinaryService;
 import truckmanagementproject.services.services.documents.DocumentService;
 import truckmanagementproject.services.services.drivers.DriverService;
@@ -17,12 +18,10 @@ import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.documents.*;
 import truckmanagementproject.web.models.drivers.DriverViewModel;
-import truckmanagementproject.web.models.expenses.VehicleExpenseViewModel;
 import truckmanagementproject.web.models.trips.TripViewModel;
 import truckmanagementproject.web.models.vehicles.VehicleViewModel;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,25 +35,29 @@ public class DocumentController {
     private final DocumentService documentService;
     private final DriverService driverService;
     private final VehicleService vehicleService;
+    private final AuthService authService;
     private final ModelMapper mapper;
     private final CloudinaryService cloudinaryService;
 
     @Autowired
-    public DocumentController(TripService tripService, DocumentService documentService, DriverService driverService, VehicleService vehicleService, ModelMapper mapper, CloudinaryService cloudinaryService) {
+    public DocumentController(TripService tripService, DocumentService documentService, DriverService driverService, VehicleService vehicleService, AuthService authService, ModelMapper mapper, CloudinaryService cloudinaryService) {
         this.tripService = tripService;
         this.documentService = documentService;
         this.driverService = driverService;
         this.vehicleService = vehicleService;
+        this.authService = authService;
         this.mapper = mapper;
         this.cloudinaryService = cloudinaryService;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/trip/add")
     public ModelAndView getAddTripDocPage(ModelAndView modelAndView,
-                                          HttpSession session) {
+                                          HttpSession session) throws Exception {
 
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserDriver(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         String driverUsername = user.getUsername();
 
@@ -101,9 +104,14 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/trip/remove/{id}")
-    public ModelAndView removeTripDoc(@PathVariable String id) {
+    public ModelAndView removeTripDoc(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         documentService.removeTripDocument(id);
         return new ModelAndView("redirect:/documents/trip/all");
     }
@@ -119,9 +127,14 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/add")
-    public ModelAndView getAddVehicleDocPage(ModelAndView modelAndView) {
+    public ModelAndView getAddVehicleDocPage(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         modelAndView.setViewName("documents/vehicle/add");
         List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
                 .stream()
@@ -164,9 +177,13 @@ public class DocumentController {
         }
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/all")
-    public ModelAndView getAllVehicleDocs(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAllVehicleDocs(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocs()
                 .stream()
@@ -177,9 +194,13 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/{id}")
-    public ModelAndView getVehicleDocumentsByTrip(@PathVariable String id, ModelAndView modelAndView) {
+    public ModelAndView getVehicleDocumentsByTrip(@PathVariable String id, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocumentsByVehicle(id)
                 .stream()
@@ -190,16 +211,25 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/remove/{id}")
-    public ModelAndView removeVehicleDoc(@PathVariable String id) {
+    public ModelAndView removeVehicleDoc(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         documentService.removeVehicleDocument(id);
         return new ModelAndView("redirect:/documents/vehicle/all");
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/add")
-    public ModelAndView getAddDriverDocPage(ModelAndView modelAndView) {
+    public ModelAndView getAddDriverDocPage(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<DriverViewModel> drivers = driverService.getAllDrivers()
                 .stream()
@@ -243,9 +273,13 @@ public class DocumentController {
         }
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/all")
-    public ModelAndView getAllDriverDocs(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAllDriverDocs(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<DriverDocumentViewModel> documents = documentService.getAllDriverDocs()
                 .stream()
@@ -256,9 +290,13 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/{id}")
-    public ModelAndView getDriverDocumentsByDriver(@PathVariable String id, ModelAndView modelAndView) {
+    public ModelAndView getDriverDocumentsByDriver(@PathVariable String id, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<DriverDocumentViewModel> documents = documentService.getAllDriverDocsByDriver(id)
                 .stream()
@@ -269,16 +307,25 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/driver/remove/{id}")
-    public ModelAndView removeDriverDoc(@PathVariable String id) {
+    public ModelAndView removeDriverDoc(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         documentService.removeDriverDocument(id);
         return new ModelAndView("redirect:/documents/driver/all");
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/company/add")
-    public ModelAndView getAddCompanyDocPage(ModelAndView modelAndView) {
+    public ModelAndView getAddCompanyDocPage(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
         modelAndView.setViewName("documents/company/add");
         return modelAndView;
     }
@@ -310,7 +357,12 @@ public class DocumentController {
     }
 
     @GetMapping("/company/all")
-    public ModelAndView getAllCompanyDocs(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAllCompanyDocs(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<CompanyDocumentViewModel> documents = documentService.getAllCompanyDocs()
                 .stream()
@@ -321,9 +373,14 @@ public class DocumentController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
+
     @GetMapping("/company/remove/{id}")
-    public ModelAndView removeCompanyDoc(@PathVariable String id) {
+    public ModelAndView removeCompanyDoc(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
         documentService.removeCompanyDocument(id);
         return new ModelAndView("redirect:/documents/company/all");
     }
