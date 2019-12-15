@@ -54,7 +54,6 @@ public class DocumentController {
     public ModelAndView getAddTripDocPage(ModelAndView modelAndView,
                                           HttpSession session) {
 
-        //TODO -> Try to move this logic to Interceptor
         modelAndView.setViewName("/documents/trip/add");
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
         String driverUsername = user.getUsername();
@@ -70,7 +69,6 @@ public class DocumentController {
     @PostMapping("/trip/add")
     public ModelAndView addTripDoc(AddTripDocumentModel addTripDocumentModel, ModelAndView modelAndView, HttpSession session) {
         if (!documentService.isTripDocValid(addTripDocumentModel)) {
-            //TODO -> Try to move this logic to Interceptor
             LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
             String driverUsername = user.getUsername();
 
@@ -97,26 +95,8 @@ public class DocumentController {
     }
 
     @GetMapping("/trip/all")
-    public ModelAndView getAllTripDocs(ModelAndView modelAndView, HttpSession session) {
-
-        //TODO -> Try to move this logic to Interceptor
-        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-
-        if (user.getRole().equals("Driver")) {
-            List<TripDocumentViewModel> documents = documentService.getAllTripDocsByDriver(user.getUsername())
-                    .stream()
-                    .map(doc -> mapper.map(doc, TripDocumentViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("documents", documents);
-            modelAndView.setViewName("documents/trip/all");
-        } else {
-            List<TripDocumentViewModel> documents = documentService.getAllTripDocs()
-                    .stream()
-                    .map(doc -> mapper.map(doc, TripDocumentViewModel.class))
-                    .collect(Collectors.toList());
-            modelAndView.addObject("documents", documents);
-            modelAndView.setViewName("documents/trip/all");
-        }
+    public ModelAndView getAllTripDocs(ModelAndView modelAndView) {
+        // List loaded by Interceptor
         return modelAndView;
     }
 
@@ -187,7 +167,6 @@ public class DocumentController {
     @GetMapping("/vehicle/all")
     public ModelAndView getAllVehicleDocs(ModelAndView modelAndView, HttpSession session) {
 
-        //TODO -> Try to move this logic to Interceptor
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocs()
                 .stream()
                 .map(doc -> mapper.map(doc, VehicleDocumentViewModel.class))
@@ -201,7 +180,6 @@ public class DocumentController {
     @GetMapping("/vehicle/{id}")
     public ModelAndView getVehicleDocumentsByTrip(@PathVariable String id, ModelAndView modelAndView) {
 
-        //TODO -> Try to move this logic to Interceptor
         List<VehicleDocumentViewModel> documents = documentService.getAllVehicleDocumentsByVehicle(id)
                 .stream()
                 .map(doc -> mapper.map(doc, VehicleDocumentViewModel.class))
@@ -222,14 +200,13 @@ public class DocumentController {
     @GetMapping("/driver/add")
     public ModelAndView getAddDriverDocPage(ModelAndView modelAndView) {
 
-        //TODO -> Try to move this logic to Interceptor
-        modelAndView.setViewName("documents/driver/add");
         List<DriverViewModel> drivers = driverService.getAllDrivers()
                 .stream()
                 .map(driver -> mapper.map(driver, DriverViewModel.class))
                 .collect(Collectors.toList());
 
         modelAndView.addObject("drivers", drivers);
+        modelAndView.setViewName("documents/driver/add");
         return modelAndView;
     }
 
@@ -269,7 +246,6 @@ public class DocumentController {
     @GetMapping("/driver/all")
     public ModelAndView getAllDriverDocs(ModelAndView modelAndView, HttpSession session) {
 
-        //TODO -> Try to move this logic to Interceptor
         List<DriverDocumentViewModel> documents = documentService.getAllDriverDocs()
                 .stream()
                 .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
@@ -283,7 +259,6 @@ public class DocumentController {
     @GetMapping("/driver/{id}")
     public ModelAndView getDriverDocumentsByDriver(@PathVariable String id, ModelAndView modelAndView) {
 
-        //TODO -> Try to move this logic to Interceptor
         List<DriverDocumentViewModel> documents = documentService.getAllDriverDocsByDriver(id)
                 .stream()
                 .map(doc -> mapper.map(doc, DriverDocumentViewModel.class))
