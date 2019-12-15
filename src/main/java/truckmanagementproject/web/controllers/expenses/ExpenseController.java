@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.cloudinary.CloudinaryService;
 import truckmanagementproject.services.services.expenses.ExpenseService;
 import truckmanagementproject.services.services.trips.TripService;
@@ -12,7 +13,6 @@ import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.services.models.expenses.AddTripExpenseServiceModel;
 import truckmanagementproject.services.models.expenses.AddVehicleExpenseServiceModel;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
-import truckmanagementproject.web.models.documents.TripDocumentViewModel;
 import truckmanagementproject.web.models.expenses.AddTripExpenseModel;
 import truckmanagementproject.web.models.expenses.AddVehicleExpenseModel;
 import truckmanagementproject.web.models.expenses.TripExpenseViewModel;
@@ -21,7 +21,6 @@ import truckmanagementproject.web.models.trips.TripViewModel;
 import truckmanagementproject.web.models.vehicles.VehicleViewModel;
 
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -34,23 +33,28 @@ public class ExpenseController {
     private final TripService tripService;
     private final VehicleService vehicleService;
     private final ExpenseService expenseService;
+    private final AuthService authService;
     private final CloudinaryService cloudinaryService;
     private final ModelMapper mapper;
 
     @Autowired
-    public ExpenseController(TripService tripService, VehicleService vehicleService, ExpenseService expenseService, CloudinaryService cloudinaryService, ModelMapper mapper) {
+    public ExpenseController(TripService tripService, VehicleService vehicleService, ExpenseService expenseService, AuthService authService, CloudinaryService cloudinaryService, ModelMapper mapper) {
         this.tripService = tripService;
         this.vehicleService = vehicleService;
         this.expenseService = expenseService;
+        this.authService = authService;
         this.cloudinaryService = cloudinaryService;
         this.mapper = mapper;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM DRIVER
     @GetMapping("/trip/add")
-    public ModelAndView getAddTripExpensePage(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAddTripExpensePage(ModelAndView modelAndView, HttpSession session) throws Exception {
 
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserDriver(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         String driverUsername = user.getUsername();
 
         List<TripViewModel> trips = tripService.getAllTripsByDriver(driverUsername)
@@ -105,9 +109,14 @@ public class ExpenseController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/trip/remove/{id}")
-    public ModelAndView removeTripExpense(@PathVariable String id) {
+    public ModelAndView removeTripExpense(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         expenseService.removeTripExpense(id);
         return new ModelAndView("redirect:/expenses/trip/all");
     }
@@ -123,9 +132,13 @@ public class ExpenseController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/add")
-    public ModelAndView getAddVehicleExpensePage(ModelAndView modelAndView) {
+    public ModelAndView getAddVehicleExpensePage(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
                 .stream()
@@ -170,9 +183,13 @@ public class ExpenseController {
         }
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/all")
-    public ModelAndView getAllVehicleExpenses(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getAllVehicleExpenses(ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
 
         List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpenses()
                 .stream()
@@ -184,16 +201,25 @@ public class ExpenseController {
         return modelAndView;
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/remove/{id}")
-    public ModelAndView removeVehicleExpense(@PathVariable String id) {
+    public ModelAndView removeVehicleExpense(@PathVariable String id, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
+
         expenseService.removeVehicleExpense(id);
         return new ModelAndView("redirect:/expenses/vehicle/all");
     }
 
-    //TODO -> ONLY ACCESSIBLE FROM MANAGER + ADMIN
     @GetMapping("/vehicle/{id}")
-    public ModelAndView getVehicleExpensesByTrip(@PathVariable String id, ModelAndView modelAndView) {
+    public ModelAndView getVehicleExpensesByTrip(@PathVariable String id, ModelAndView modelAndView, HttpSession session) throws Exception {
+
+        LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
+            throw new Exception("Unauthorized user");
+        }
         List<VehicleExpenseViewModel> expenses = expenseService.getAllVehicleExpensesByVehicle(id)
                 .stream()
                 .map(exp -> mapper.map(exp, VehicleExpenseViewModel.class))
