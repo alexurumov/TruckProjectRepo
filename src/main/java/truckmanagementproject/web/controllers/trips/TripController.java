@@ -54,7 +54,7 @@ public class TripController {
     public ModelAndView getTripAddForm(ModelAndView modelAndView, HttpSession session) throws Exception {
 
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserDriver(user)) {
+        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
             throw new Exception("Unauthorized user");
         }
 
