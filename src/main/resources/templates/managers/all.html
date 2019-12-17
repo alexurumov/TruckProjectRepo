@@ -4,6 +4,7 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:include="~{fragments/head}"/>
+<link rel="stylesheet" href="/css/managers.css">
 
 <body>
 <div class="d-xl-flex">
@@ -22,17 +23,7 @@
                                 <th>Actons</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <th:block th:each="manager : ${managers}">
-                                <tr>
-                                    <td>[[${manager.name}]]</td>
-                                    <td>
-                                        <a th:href="'/managers/remove/' + ${manager.id}"
-                                           class="btn btn-block1 btn-sm btn-danger">Remove
-                                        </a>
-                                    </td>
-                                </tr>
-                            </th:block>
+                            <tbody id="managers-table">
                             </tbody>
                         </table>
                     </div>
@@ -44,6 +35,13 @@
 </div>
 
 <th:block th:include="~{fragments/navbar-footer}"/>
+<th:block th:include="~{fragments/loader}" />
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+<script src="/js/managers.js"></script>
 
 </body>
 </html>

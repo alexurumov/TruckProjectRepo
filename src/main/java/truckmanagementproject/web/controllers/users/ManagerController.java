@@ -66,16 +66,10 @@ public class ManagerController {
     @GetMapping("/all")
     public ModelAndView getAllManagers(ModelAndView modelAndView, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user) && !authService.isUserManager(user)) {
+        if (!authService.isUserAdmin(user)) {
             throw new Exception("Unauthorized user");
         }
-        List<ManagerViewModel> managers = managerService.getAllManagers()
-                .stream()
-                .map(manager -> mapper.map(manager, ManagerViewModel.class))
-                .collect(Collectors.toList());
-
-        modelAndView.addObject("managers", managers);
-        modelAndView.setViewName("/managers/all");
+        modelAndView.setViewName("managers/all");
         return modelAndView;
     }
 
