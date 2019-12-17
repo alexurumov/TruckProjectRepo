@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+<link rel="stylesheet" href="/css/managers.css">
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/header}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="py-5 py-sm-11">
+            <div class="container"><br><br>
+                <div class="row align-items-center">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Actons</th>
+                            </tr>
+                            </thead>
+                            <tbody id="managers-table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+<th:block th:include="~{fragments/loader}" />
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+<script src="/js/managers.js"></script>
+
+</body>
+</html>

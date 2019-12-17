@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/header}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col text-center">
+                    <h1 style="margin-bottom: 40px">Add new document</h1>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <form th:action="@{/documents/company/add}" class="col-md-12 mx-auto" method="post"
+                      enctype="multipart/form-data">
+
+                    <!--Alert popup message for invalid input!-->
+                    <th:block th:if="${isValid == false}">
+                        <div class="alert alert-danger alert-dismissible" role="alertdialog">
+                            <a href="#" class="close" data-dismiss="alert"
+                               aria-label="close">&times;</a>
+                            Invalid input!
+                        </div>
+                    </th:block>
+
+                    <div class="card card-body card-project mb-3">
+                        <div class="row">
+                            <div class="col-md-6 card-body">
+                                <div class="mb-3 form-group">
+                                    <label for="type">Company Document Type</label>
+                                    <select class="form-control" id="type" name="type">
+                                        <option>AdrLicense</option>
+                                        <option>TransportLicense</option>
+                                        <option>AdministratorLicense</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 card-body">
+                                <label class="control-label" for="expiryDate">Expiry Date</label>
+                                <input class="form-control" id="expiryDate" name="expiryDate"
+                                       placeholder="DD/MM/YYY" type="text"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 card-body">
+                                <div class="mb-3 form-group">
+                                    <label for="picture">Company Document Picture</label>
+                                    <input type="file" class="form-control-file" id="picture"
+                                           name="picture">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mx-auto modal-footer">
+                            <button class="btn btn-block btn-lg btn-primary" type="submit">Add document</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+<!-- Include jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<script>
+    $(document).ready(function () {
+        var date_input = $('input[name="expiryDate"]'); //our date input has the name "date"
+        var container = $('.container form expiryDate').length > 0 ? $('.container form expiryDate').parent() : "body";
+        date_input.datepicker({
+            format: 'dd/mm/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+        })
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}" />
+
+<body>
+<div class="d-xl-flex">
+
+  <th:block th:include="~{fragments/header}" />
+
+  <main class="flex-xl-grow-1">
+    <div class="py-5 py-sm-11">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col text-center">
+            <h1 style="margin-bottom: 40px">OOPS! <br> Something went wrong!</h1>
+            <h1 style="margin-bottom: 40px">Please, return to previous page, <br> or <a href="/home"> go back Home!</a></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}" />
+
+</body>
+</html>

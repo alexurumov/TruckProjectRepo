@@ -1,0 +1,343 @@
+<th:block th:fragment>
+    <nav class="navbar navbar-expand-xl sticky-top">
+        <div class="container">
+            <a rel="home" href="/home">
+                <i class="eva-xl" data-eva="github" data-eva-animation="pulse"></i>
+            </a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" type="button"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle Navigation">
+                <i class="eva-md" data-eva="menu"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <th:block th:if="${session.user == null}">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" id="navbarDropdownLogin" href="/login" role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                Login
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" id="navbarDropdownHome" href="/home" role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                Home
+                            </a>
+                        </li>
+
+                    </th:block>
+
+                    <th:block th:unless="${session.user == null}">
+
+                        <th:block th:if="${session.user.role == 'Admin'}">
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownHome" href="/home" role="button"
+                                   aria-haspopup="false" aria-expanded="false">
+                                    Home
+                                </a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownManagers" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Trips
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                                    <a class="dropdown-item" href="/trips/add">Add Trip</a>
+                                    <a class="dropdown-item" href="/trips/current">Current Trips</a>
+                                    <a class="dropdown-item" href="/trips/finished">Finished Trips</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownTrips" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Managers
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                                    <a class="dropdown-item" href="/managers/add">Add Manager</a>
+                                    <a class="dropdown-item" href="/managers/all">All Managers</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownDrivers" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Drivers
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownDrivers">
+                                    <a class="dropdown-item" href="/drivers/add">Add Driver</a>
+                                    <a class="dropdown-item" href="/drivers/all">All Drivers</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownVehicles" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Vehicles
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownVehicles">
+                                    <a class="dropdown-item" href="/vehicles/add">Add Vehicle</a>
+                                    <a class="dropdown-item" href="/vehicles/all">All Vehicles</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownDocuments" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Documents
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownDocuments">
+                                    <a class="dropdown-item" href="/documents/driver/add">+ Driver Doc</a>
+                                    <a class="dropdown-item" href="/documents/vehicle/add">+ Vehicle Doc</a>
+                                    <a class="dropdown-item" href="/documents/company/add">+ Company Doc</a>
+                                    <a class="dropdown-item" href="/documents/trip/all">All Trip Docs</a>
+                                    <a class="dropdown-item" href="/documents/vehicle/all">All Vehicle Docs</a>
+                                    <a class="dropdown-item" href="/documents/driver/all">All Driver Docs</a>
+                                    <a class="dropdown-item" href="/documents/company/all">All Company Docs</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownExpenses" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Expenses
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                                    <a class="dropdown-item" href="/expenses/vehicle/add">+ Vehicle Expense</a>
+                                    <a class="dropdown-item" href="/expenses/trip/all">All Trip Expenses</a>
+                                    <a class="dropdown-item" href="/expenses/vehicle/all">All Vehicle Expenses</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownSummary" data-toggle="dropdown" href="#"
+                                   role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Summary
+                                    <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                    data-eva="arrow-down"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                                    <a class="dropdown-item" href="/summary/overall">Overall</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="navbarDropdownLogout" href="/logout" role="button"
+                                   aria-haspopup="false" aria-expanded="false">
+                                    Logout
+                                </a>
+                            </li>
+
+                        </th:block>
+
+                        <th:block th:unless="${session.user.role == 'Admin'}">
+
+                            <th:block th:if="${session.user.role == 'Manager'}">
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownHome" href="/home" role="button"
+                                       aria-haspopup="false" aria-expanded="false">
+                                        Home
+                                    </a>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownManagers" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Trips
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownManagers">
+                                        <a class="dropdown-item" href="/trips/add">Add Trip</a>
+                                        <a class="dropdown-item" href="/trips/current">Current Trips</a>
+                                        <a class="dropdown-item" href="/trips/finished">Finished Trips</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownDrivers" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Drivers
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownDrivers">
+                                        <a class="dropdown-item" href="/drivers/all">All Drivers</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownVehicles" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Vehicles
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownVehicles">
+                                        <a class="dropdown-item" href="/vehicles/all">All Vehicles</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownDocuments" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Documents
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownDocuments">
+                                        <a class="dropdown-item" href="/documents/driver/add">+ Driver Doc</a>
+                                        <a class="dropdown-item" href="/documents/vehicle/add">+ Vehicle Doc</a>
+                                        <a class="dropdown-item" href="/documents/company/add">+ Company Doc</a>
+                                        <a class="dropdown-item" href="/documents/trip/all">All Trip Docs</a>
+                                        <a class="dropdown-item" href="/documents/vehicle/all">All Vehicle Docs</a>
+                                        <a class="dropdown-item" href="/documents/driver/all">All Driver Docs</a>
+                                        <a class="dropdown-item" href="/documents/company/all">All Company Docs</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownExpenses" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Expenses
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                                        <a class="dropdown-item" href="/expenses/vehicle/add">+ Vehicle Expense</a>
+                                        <a class="dropdown-item" href="/expenses/trip/all">All Trip Expenses</a>
+                                        <a class="dropdown-item" href="/expenses/vehicle/all">All Vehicle Expenses</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownSummary" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Summary
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                                        <a class="dropdown-item" href="/summary/overall">Overall</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownLogout" href="/logout" role="button"
+                                       aria-haspopup="false" aria-expanded="false">
+                                        Logout
+                                    </a>
+                                </li>
+
+                            </th:block>
+
+                            <th:block th:unless="${session.user.role == 'Manager'}">
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownHome" href="/home" role="button"
+                                       aria-haspopup="false" aria-expanded="false">
+                                        Home
+                                    </a>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownMyTrips" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        My Trips
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMyTrips">
+                                        <a class="dropdown-item" href="/trips/current">Current</a>
+                                        <a class="dropdown-item" href="/trips/finished">Finished Trips</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownMyDocuments" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        My Documents
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMyDocuments">
+                                        <a class="dropdown-item" href="/documents/trip/add">+ Trip Doc</a>
+                                        <a class="dropdown-item" href="/documents/trip/all">All Trip Documents</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownTripExpenses" data-toggle="dropdown" href="#"
+                                       role="button"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        Trip Expenses
+                                        <i class="eva-xs" data-eva="arrow-right"></i><i class="eva-xs"
+                                                                                        data-eva="arrow-down"></i>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownTripExpenses">
+                                        <a class="dropdown-item" href="/expenses/trip/add">+ Trip Expense</a>
+                                        <a class="dropdown-item" href="/expenses/trip/all">All Trip Expenses</a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" id="navbarDropdownLogout" href="/logout" role="button"
+                                       aria-haspopup="false" aria-expanded="false">
+                                        Logout
+                                    </a>
+                                </li>
+
+                            </th:block>
+
+                        </th:block>
+
+                    </th:block>
+
+                </ul>
+                <hr class="w-100">
+                <div>
+                    <span class="avatar avatar-md h5 bg-primary rounded-circle">
+                        <th:block th:if="${session.user == null}">
+
+                        </th:block>
+
+                        <th:block th:unless="${session.user == null}">
+                            [[${session.user.shortUsername}]]
+                        </th:block>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</th:block>
