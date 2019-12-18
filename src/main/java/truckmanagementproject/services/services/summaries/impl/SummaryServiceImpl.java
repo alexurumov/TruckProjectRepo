@@ -31,7 +31,7 @@ public class SummaryServiceImpl implements SummaryService {
         BigDecimal fuel = calculateFuel();
         BigDecimal adBlue = calculateAdBlue();
         BigDecimal toll = calculateToll();
-        BigDecimal totalIncome = expenses.add(BigDecimal.valueOf(emptyKm + tripKm));
+        BigDecimal totalIncome = expenses.add(BigDecimal.valueOf((emptyKm + tripKm) * 1.09));
         BigDecimal totalExpense = fuel.add(adBlue).add(toll);
 
         SummaryServiceModel summary = new SummaryServiceModel();
