@@ -49,6 +49,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void addTripExpense(AddTripExpenseServiceModel tripExpense) throws Exception {
         TripExpense expense = mapper.map(tripExpense, TripExpense.class);
         Trip trip = tripRepository.getByReference(tripExpense.getTripRef());
+        if (trip == null) {
+            throw new Exception("Invalid Trip");
+        }
         expense.setTrip(trip);
 
         if (validationUtil.isValid(expense)) {
@@ -62,6 +65,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void addVehicleExpense(AddVehicleExpenseServiceModel vehicleExpense) throws Exception {
         VehicleExpense expense = mapper.map(vehicleExpense, VehicleExpense.class);
         Vehicle vehicle = vehicleRepository.getByRegNumber(vehicleExpense.getVehicleRegNumber());
+        if (vehicle == null) {
+            throw new Exception("Invalid vehicle");
+        }
         expense.setVehicle(vehicle);
         if (validationUtil.isValid(expense)) {
             vehicleExpenseRepository.saveAndFlush(expense);
@@ -69,15 +75,6 @@ public class ExpenseServiceImpl implements ExpenseService {
             throw new Exception("Invalid Vehicle Expense");
         }
 
-    }
-
-    @Override
-    @Transactional
-    public List<TripExpenseServiceModel> getAllTripExpensesByDriver(String username) {
-        return tripExpenseRepository.getAllByTripDriverUsername(username)
-                .stream()
-                .map(exp -> mapper.map(exp, TripExpenseServiceModel.class))
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -90,8 +87,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public void removeTripExpense(String id) {
-        tripExpenseRepository.deleteById(id);
+    public List<TripExpenseServiceModel> getAllTripExpensesByDriver(String username) {
+        return tripExpenseRepository.getAllByTripDriverUsername(username)
+                .stream()
+                .map(exp -> mapper.map(exp, TripExpenseServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -104,8 +104,22 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    @Transactional
+    public void removeTripExpense(String id) {
+        tripExpenseRepository.deleteById(id);
+    }
+
+    @Override
     public List<VehicleExpenseServiceModel> getAllVehicleExpenses() {
         return vehicleExpenseRepository.findAll()
+                .stream()
+                .map(exp -> mapper.map(exp, VehicleExpenseServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String id) {
+        return vehicleExpenseRepository.getAllByVehicleId(id)
                 .stream()
                 .map(exp -> mapper.map(exp, VehicleExpenseServiceModel.class))
                 .collect(Collectors.toList());
@@ -115,14 +129,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Transactional
     public void removeVehicleExpense(String id) {
         vehicleExpenseRepository.deleteById(id);
-    }
-
-    @Override
-    public List<VehicleExpenseServiceModel> getAllVehicleExpensesByVehicle(String id) {
-        return vehicleExpenseRepository.getAllByVehicleId(id)
-                .stream()
-                .map(exp -> mapper.map(exp, VehicleExpenseServiceModel.class))
-                .collect(Collectors.toList());
     }
 
     @Override
