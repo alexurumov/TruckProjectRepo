@@ -178,6 +178,7 @@ public class DocumentServiceImpl implements DocumentService {
         companyDocumentRepository.deleteById(id);
     }
 
+    ////
     @Override
     public List<VehicleDocumentServiceModel> getAllVehicleDocumentsByVehicle(String id) {
         return vehicleDocumentRepository.getAllByVehicleId(id)
