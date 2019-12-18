@@ -35,6 +35,9 @@ public class MilestoneServiceImpl implements MilestoneService {
     public void addMilestone(AddMilestoneServiceModel collectionModel) throws Exception {
         Milestone collection = mapper.map(collectionModel, Milestone.class);
         Trip trip = tripRepository.getByReference(collectionModel.getTripReference());
+        if (trip == null) {
+            throw new Exception("Invalid Trip");
+        }
         collection.setTrip(trip);
 
         if (validationUtil.isValid(collection)) {
@@ -44,8 +47,11 @@ public class MilestoneServiceImpl implements MilestoneService {
 
     @Override
     @Transactional
-    public void updateMilestone(String id) {
+    public void updateMilestone(String id) throws Exception {
         Milestone milestone = milestoneRepository.getById(id);
+        if (milestone == null) {
+            throw new Exception("Invalid Milestone");
+        }
         milestone.setIsFinished(true);
         milestoneRepository.saveAndFlush(milestone);
     }
