@@ -159,7 +159,7 @@ public class TripController extends BaseController {
     }
 
     @GetMapping("/details/{reference}")
-    public ModelAndView getTripDetails(@PathVariable String reference, ModelAndView modelAndView) {
+    public ModelAndView getTripDetails(@PathVariable String reference, ModelAndView modelAndView) throws Exception {
 
         TripServiceModel tripModel = tripService.getTripByReference(reference);
         TripViewModel trip = mapper.map(tripModel, TripViewModel.class);

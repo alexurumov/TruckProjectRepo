@@ -47,29 +47,70 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<TripServiceModel> getAllTripsByDriver(String driverUsername) {
-        return tripRepository.getAllByDriverUsername(driverUsername)
-                .stream()
-                .map(trip -> mapper.map(trip, TripServiceModel.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean isReferenceTaken(String reference) {
-        Trip trip = tripRepository.getByReference(reference);
-        return trip != null;
-    }
-
-    @Override
     public void addTrip(AddTripServiceModel tripServiceModel) throws Exception {
         Trip trip = mapper.map(tripServiceModel, Trip.class);
         Driver driver = driverRepository.getByName(tripServiceModel.getDriverName());
+
+        if (driver == null) {
+            throw new Exception("Invalid driver");
+        }
+
         trip.setDriver(driver);
         Vehicle vehicle = vehicleRepository.getByRegNumber(tripServiceModel.getVehicleRegNumber());
+
+        if (vehicle == null) {
+            throw new Exception("Invalid vehicle");
+        }
+
         trip.setVehicle(vehicle);
+
         if (validationUtil.isValid(trip)) {
             tripRepository.saveAndFlush(trip);
         } else throw new Exception("Invalid Trip!");
+    }
+
+    @Override
+    public TripServiceModel getTripByReference(String reference) throws Exception {
+        Trip trip = tripRepository.getByReference(reference);
+        if (trip == null) {
+            throw new Exception("Invalid Trip");
+        }
+        TripServiceModel tripModel = mapper.map(trip, TripServiceModel.class);
+
+        List<MilestoneServiceModel> milestones = trip.getMilestones()
+                .stream()
+                .map(milestone -> mapper.map(milestone, MilestoneServiceModel.class))
+                .collect(Collectors.toList());
+
+        tripModel.setMilestones(milestones);
+
+        BigDecimal expenses = trip.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        tripModel.setExpensesSum(expenses);
+
+        return tripModel;
+    }
+
+    @Override
+    public void finishTrip(FinishTripServiceModel tripServiceModel, String reference) throws Exception {
+        Trip trip = tripRepository.getByReference(reference);
+        if (trip == null) {
+            throw new Exception("Invalid trip");
+        }
+
+        trip.setEmptyKm(tripServiceModel.getEmptyKm());
+        trip.setTripKm(tripServiceModel.getTripKm());
+        trip.setEmptyPallets(tripServiceModel.getEmptyPallets());
+        trip.setIsFinished(true);
+
+        if (validationUtil.isValid(trip)) {
+            tripRepository.saveAndFlush(trip);
+        } else throw new Exception("Invalid Trip!");
+    }
+
+    @Override
+    @Transactional
+    public void remove(String reference) {
+        tripRepository.deleteByReference(reference);
     }
 
     @Override
@@ -90,36 +131,6 @@ public class TripServiceImpl implements TripService {
                     return model;
                 })
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public TripServiceModel getTripByReference(String reference) {
-        Trip trip = tripRepository.getByReference(reference);
-        TripServiceModel tripModel = mapper.map(trip, TripServiceModel.class);
-
-        List<MilestoneServiceModel> milestones = trip.getMilestones()
-                .stream()
-                .map(milestone -> mapper.map(milestone, MilestoneServiceModel.class))
-                .collect(Collectors.toList());
-
-        tripModel.setMilestones(milestones);
-
-        BigDecimal expenses = trip.getExpenses().stream().map(Expense::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-        tripModel.setExpensesSum(expenses);
-
-        return tripModel;
-    }
-
-    @Override
-    public void finishTrip(FinishTripServiceModel tripServiceModel, String reference) throws Exception {
-        Trip trip = tripRepository.getByReference(reference);
-        trip.setEmptyKm(tripServiceModel.getEmptyKm());
-        trip.setTripKm(tripServiceModel.getTripKm());
-        trip.setEmptyPallets(tripServiceModel.getEmptyPallets());
-        trip.setIsFinished(true);
-        if (validationUtil.isValid(trip)) {
-            tripRepository.saveAndFlush(trip);
-        } else throw new Exception("Invalid Trip!");
     }
 
     @Override
@@ -150,9 +161,19 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    @Transactional
-    public void remove(String reference) {
-        tripRepository.deleteByReference(reference);
+    public List<TripServiceModel> getAllTripsByDriverId(String id) {
+        return tripRepository.getAllByDriverId(id)
+                .stream()
+                .map(trip -> mapper.map(trip, TripServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TripServiceModel> getAllTripsByDriver(String driverUsername) {
+        return tripRepository.getAllByDriverUsername(driverUsername)
+                .stream()
+                .map(trip -> mapper.map(trip, TripServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -164,11 +185,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<TripServiceModel> getAllTripsByDriverId(String id) {
-        return tripRepository.getAllByDriverId(id)
-                .stream()
-                .map(trip -> mapper.map(trip, TripServiceModel.class))
-                .collect(Collectors.toList());
+    public boolean isReferenceTaken(String reference) {
+        Trip trip = tripRepository.getByReference(reference);
+        return trip != null;
     }
 
     @Override

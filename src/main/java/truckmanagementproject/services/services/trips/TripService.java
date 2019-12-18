@@ -20,7 +20,7 @@ public interface TripService {
 
     List<TripServiceModel> getAllCurrent();
 
-    TripServiceModel getTripByReference(String reference);
+    TripServiceModel getTripByReference(String reference) throws Exception;
 
     void finishTrip(FinishTripServiceModel tripServiceModel, String reference) throws Exception;
 
