@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.managers.ManagerService;
 import truckmanagementproject.services.models.managers.AddManagerServiceModel;
+import truckmanagementproject.web.controllers.base.BaseController;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.managers.AddManagerModel;
 import truckmanagementproject.web.models.managers.ManagerViewModel;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/managers")
-public class ManagerController {
+public class ManagerController extends BaseController {
 
     @ModelAttribute
     public AddManagerModel model() {
@@ -29,21 +30,19 @@ public class ManagerController {
 
     private final ModelMapper mapper;
     private final ManagerService managerService;
-    private final AuthService authService;
 
     @Autowired
     public ManagerController(ModelMapper mapper, ManagerService managerService, AuthService authService) {
+        super(authService);
         this.mapper = mapper;
         this.managerService = managerService;
-        this.authService = authService;
     }
 
     @GetMapping("/add")
     public String getAddManagerForm(@ModelAttribute("model") AddManagerModel model, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
+
         return "managers/add";
     }
 
@@ -66,9 +65,8 @@ public class ManagerController {
     @GetMapping("/all")
     public ModelAndView getAllManagers(ModelAndView modelAndView, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
+
         modelAndView.setViewName("managers/all");
         return modelAndView;
     }
@@ -76,9 +74,8 @@ public class ManagerController {
     @GetMapping("/remove/{id}")
     public ModelAndView removeManager(@PathVariable String id, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
+
         managerService.removeManager(id);
         return new ModelAndView("redirect:/managers/all");
     }

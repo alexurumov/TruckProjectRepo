@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.drivers.DriverService;
 import truckmanagementproject.services.models.drivers.AddDriverServiceModel;
+import truckmanagementproject.web.controllers.base.BaseController;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.drivers.AddDriverModel;
 import truckmanagementproject.web.models.drivers.DriverViewModel;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/drivers")
-public class DriverController {
+public class DriverController extends BaseController {
 
     @ModelAttribute
     public AddDriverModel model() {
@@ -29,21 +30,18 @@ public class DriverController {
 
     private final ModelMapper mapper;
     private final DriverService driverService;
-    private final AuthService authService;
 
     @Autowired
     public DriverController(ModelMapper mapper, DriverService driverService, AuthService authService) {
+        super(authService);
         this.mapper = mapper;
         this.driverService = driverService;
-        this.authService = authService;
     }
 
     @GetMapping("/add")
     public String getAddDriverForm(@ModelAttribute("model") AddDriverModel model, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
 
         return "drivers/add";
     }
@@ -67,9 +65,8 @@ public class DriverController {
     @GetMapping("/all")
     public ModelAndView getAllDrivers(ModelAndView modelAndView, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user) && !authService.isUserManager(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdminAndManager(user);
+
         List<DriverViewModel> drivers = driverService.getAllDrivers()
                 .stream()
                 .map(driver -> mapper.map(driver, DriverViewModel.class))
@@ -83,9 +80,8 @@ public class DriverController {
     @GetMapping("/remove/{id}")
     public ModelAndView removeDriver(@PathVariable String id, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
+
         driverService.removeDriver(id);
         return new ModelAndView("redirect:/drivers/all");
     }

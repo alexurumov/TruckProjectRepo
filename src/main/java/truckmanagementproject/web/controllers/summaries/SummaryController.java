@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.summaries.SummaryService;
+import truckmanagementproject.web.controllers.base.BaseController;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.summaries.SummaryViewModel;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class SummaryController {
+public class SummaryController extends BaseController {
 
     private final SummaryService summaryService;
-    private final AuthService authService;
     private final ModelMapper mapper;
 
     @Autowired
     public SummaryController(SummaryService summaryService, AuthService authService, ModelMapper mapper) {
+        super(authService);
         this.summaryService = summaryService;
-        this.authService = authService;
         this.mapper = mapper;
     }
 
@@ -30,9 +30,7 @@ public class SummaryController {
     public ModelAndView getOverallSummary(ModelAndView modelAndView, HttpSession session) throws Exception {
 
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserManager(user) && !authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdminAndManager(user);
 
         SummaryViewModel summary = mapper.map(summaryService.getSummary(), SummaryViewModel.class);
 

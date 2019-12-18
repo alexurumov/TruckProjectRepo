@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import truckmanagementproject.services.services.auth.AuthService;
 import truckmanagementproject.services.services.vehicles.VehicleService;
 import truckmanagementproject.services.models.vehicles.AddVehicleServiceModel;
+import truckmanagementproject.web.controllers.base.BaseController;
 import truckmanagementproject.web.models.auth.LoginUserViewModel;
 import truckmanagementproject.web.models.vehicles.AddVehicleModel;
 import truckmanagementproject.web.models.vehicles.VehicleViewModel;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/vehicles")
-public class VehicleController {
+public class VehicleController extends BaseController {
 
     @ModelAttribute
     public AddVehicleModel model() {
@@ -29,21 +30,19 @@ public class VehicleController {
 
     private final ModelMapper mapper;
     private final VehicleService vehicleService;
-    private final AuthService authService;
 
     @Autowired
     public VehicleController(ModelMapper mapper, VehicleService vehicleService, AuthService authService) {
+        super(authService);
         this.mapper = mapper;
         this.vehicleService = vehicleService;
-        this.authService = authService;
     }
 
     @GetMapping("/add")
     public String getAddVehicleForm(@ModelAttribute("model") AddVehicleModel model, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
+
         return "vehicles/add-vehicle";
     }
 
@@ -66,9 +65,8 @@ public class VehicleController {
     @GetMapping("/all")
     public ModelAndView getAllVehicles(ModelAndView modelAndView, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user) && !authService.isUserManager(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdminAndManager(user);
+
         List<VehicleViewModel> vehicles = vehicleService.getAllVehicles()
                 .stream()
                 .map(vehicle -> mapper.map(vehicle, VehicleViewModel.class))
@@ -82,9 +80,8 @@ public class VehicleController {
     @GetMapping("/remove/{id}")
     public ModelAndView removeDriverDoc(@PathVariable String id, HttpSession session) throws Exception {
         LoginUserViewModel user = (LoginUserViewModel) session.getAttribute("user");
-        if (!authService.isUserAdmin(user)) {
-            throw new Exception("Unauthorized user");
-        }
+        authorizeAdmin(user);
+
         vehicleService.removeVehicle(id);
         return new ModelAndView("redirect:/vehicles/all");
     }
