@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/header}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col text-center">
+                    <h1 style="margin-bottom: 40px">Add New Expense</h1>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <th:block th:if="${#lists.isEmpty(trips)}">
+                    <div class="mx-auto">
+                        You must have trips to upload trip expense!!!
+                    </div>
+                </th:block>
+                <th:block th:unless="${#lists.isEmpty(trips)}">
+
+                    <form th:action="@{/expenses/trip/add}" class="col-md-12 mx-auto" method="post"
+                          enctype="multipart/form-data">
+
+                        <!--Alert popup message for invalid input!-->
+                        <th:block th:if="${isValid == false}">
+                            <div class="alert alert-danger alert-dismissible" role="alertdialog">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                Invalid input!
+                            </div>
+                        </th:block>
+
+                        <div class="card card-body card-project mb-3">
+                            <div class="row">
+                                <div class="col-md-6 card-body">
+                                    <div class="mb-3 form-group">
+                                        <label for="type">Trip Expense Type</label>
+                                        <select class="form-control" id="type" name="type">
+                                            <option>Parking</option>
+                                            <option>Carwash</option>
+                                            <option>Hotel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 card-body">
+                                    <label class="control-label" for="date">Date</label>
+                                    <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY"
+                                           type="text"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 card-body">
+                                    <div class="mb-3 form-group">
+                                        <label for="country">Country</label>
+                                        <select class="form-control" id="country" name="country">
+                                            <option>Greece</option>
+                                            <option>Bulgaria</option>
+                                            <option>Romania</option>
+                                            <option>Hungary</option>
+                                            <option>Czech</option>
+                                            <option>Austria</option>
+                                            <option>Germany</option>
+                                            <option>Italy</option>
+                                            <option>France</option>
+                                            <option>Netherlands</option>
+                                            <option>Belgium</option>
+                                            <option>Luxembourg</option>
+                                            <option>UK</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 card-body">
+                                    <label for="tripRef">Trip Reference</label>
+                                    <select class="form-control" id="tripRef" name="tripRef">
+                                        <option value="0">Select Trip Reference ...</option>
+                                        <option th:each="trip : ${trips}" th:value="${trip.reference}"
+                                                th:text="${trip.reference}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 card-body">
+                                    <div class="mb-3 form-group">
+                                        <label for="cost">Cost </label>
+                                        <input class="form-control form-control-lg mb-5" id="cost"
+                                               type="number" step="any"
+                                               name="cost" placeholder="€">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 card-body">
+                                    <label for="picture">Expense Picture</label><br>
+                                    <input type="file" class="form-control-file" id="picture" name="picture">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mx-auto modal-footer">
+                                <button class="btn btn-block btn-lg btn-primary" type="submit">Add Expense</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </th:block>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+<!-- Include jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<script>
+    $(document).ready(function () {
+        var date_input = $('input[name="date"]'); //our date input has the name "date"
+        var container = $('.container form date').length > 0 ? $('.container form date').parent() : "body";
+        date_input.datepicker({
+            format: 'dd/mm/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+        })
+    })
+</script>
+
+</body>
+</html>

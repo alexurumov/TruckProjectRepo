@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:include="~{fragments/head}"/>
+
+<body>
+<div class="d-xl-flex">
+
+    <th:block th:include="~{fragments/header}"/>
+
+    <main class="flex-xl-grow-1">
+        <div class="py-5 py-sm-11">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col text-center">
+                        <h1 style="margin-bottom: 40px">Add new vehicle</h1>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <form th:action="@{/vehicles/add}" class="col-md-6 mx-auto" method="post" th:object="${model}">
+                            <div class="modal-body p-0">
+                                <div class="px-3 py-5 px-sm-5">
+                                    <div class="tab-content">
+                                        <div class="col-md-12 mx-auto tab-pane fade show active" id="projectDetails" role="tabpanel">
+<!--                                            Alert popup message for invalid input!-->
+                                            <th:block th:if="${#fields.hasAnyErrors()}">
+                                                <div class="alert alert-danger alert-dismissible" role="alertdialog">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    Input must be "[reg number] / [reg number]"
+                                                </div>
+                                            </th:block>
+
+                                            <label for="vehicleRegNumber">Vehicle registration number</label>
+                                            <input class="form-control form-control-lg mb-5" id="vehicleRegNumber"
+                                            type="text" name="regNumber" placeholder="Truck / trailer ">
+
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mx-auto modal-footer">
+                                <button class="btn btn-block btn-lg btn-primary" type="submit">Add new vehicle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<th:block th:include="~{fragments/navbar-footer}"/>
+
+</body>
+</html>
