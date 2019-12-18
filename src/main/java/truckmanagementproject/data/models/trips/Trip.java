@@ -1,5 +1,6 @@
 package truckmanagementproject.data.models.trips;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Trip extends BaseEntity {
 
     @Column(name = "date", nullable = false)
