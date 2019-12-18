@@ -26,14 +26,14 @@
                                     <h4 style="text-align:center">INCOME</h4><br>
                                     <canvas id="chDonut1" height="150"></canvas>
                                     <br>
-                                    <h4 style="text-align:center">TOTAL <br> [[${summary.totalIncome}]]</h4>
+                                    <h4 style="text-align:center">TOTAL <br> [[${#numbers.formatDecimal(summary.totalIncome, 0, 2)}]]</h4>
                                 </div>
 
                                 <div class="col-6 card-body">
                                     <h4 style="text-align:center">EXPENSE</h4><br>
                                     <canvas id="chDonut2" height="150"></canvas>
                                     <br>
-                                    <h4 style="text-align:center">TOTAL <br> [[${summary.totalExpense}]]</h4>
+                                    <h4 style="text-align:center">TOTAL <br> [[${#numbers.formatDecimal(summary.totalExpense, 0, 2)}]]</h4>
                                 </div>
                             </div>
 
@@ -41,7 +41,7 @@
                                 <div class="col-12 card-body">
                                     <h2 style="text-align:center">RESULT <br>
                                         <div th:with="result=${summary.totalIncome - summary.totalExpense}">
-                                        [[${result}]]
+                                            [[${#numbers.formatDecimal(result, 0, 2)}]]
                                     </div></h2>
                                 </div>
                             </div>
