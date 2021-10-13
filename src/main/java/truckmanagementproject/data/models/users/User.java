@@ -27,7 +27,7 @@ public abstract class User extends BaseEntity {
     private String name;
 
     @Column(name = "username", nullable = false)
-    @Pattern(regexp = "[A-Z]{2}.+")
+    @Pattern(regexp = "[A-Za-z]{2}.+")
     private String username;
 
     @Column(name = "password", nullable = false)
